@@ -5,7 +5,7 @@ using Unity.Cinemachine;
 public class PlayerInput : MonoBehaviour
 {
     [SerializeField] InputActionAsset inputActionAsset; // 引用現有的 Input System 資源
-    [SerializeField] Transform camaraFollowTarget; // 相機跟隨的物件
+    [SerializeField] Rigidbody camaraFollowTarget; // 相機跟隨的物件
     [SerializeField] CinemachineCamera cinemachineCamera; // 引用 Cinemachine 攝影機
     [SerializeField] CamaraConfig camaraConfig; // 引用相機配置類別
 
@@ -108,7 +108,9 @@ public class PlayerInput : MonoBehaviour
         moveX += mouseMovement.x;
         moveY += mouseMovement.y;
 
-        camaraFollowTarget.transform.position += new Vector3(moveX, 0, moveY) * camaraConfig.CamaraMoveSpeed * Time.deltaTime; // 更新相機位置
+        //velocity是剛體的速度，linearVelocity是線性速度
+        // 這裡的速度是相機跟隨目標的速度
+        camaraFollowTarget.linearVelocity = new Vector3(moveX, 0, moveY) * camaraConfig.CamaraMoveSpeed; // 更新相機位置
     }
 
     private Vector2 GetMouseMovement()

@@ -3953,7 +3953,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0.48903134, y: 0.51095873, z: -0.50211775, w: -0.49764183}
-  m_LocalPosition: {x: 22.1, y: 13.3, z: -35.39}
+  m_LocalPosition: {x: 22.1, y: 15, z: -35.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5085,7 +5085,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 415000886}
-  m_Layer: 0
+  - component: {fileID: 415000888}
+  - component: {fileID: 415000887}
+  m_Layer: 3
   m_Name: CamaraFollowTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5101,12 +5103,60 @@ Transform:
   m_GameObject: {fileID: 415000885}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.1, y: -1.7, z: -35.39}
+  m_LocalPosition: {x: 22.1, y: 0, z: -35.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &415000887
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415000885}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!135 &415000888
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415000885}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &442738853
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7562,11 +7612,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputActionAsset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  camaraFollowTarget: {fileID: 415000886}
+  camaraFollowTarget: {fileID: 415000887}
   cinemachineCamera: {fileID: 1401683352}
   camaraConfig:
     <EnableEdgePan>k__BackingField: 1
-    <EdgePanSpeed>k__BackingField: 20
+    <EdgePanSpeed>k__BackingField: 30
     <EdgePanDistance>k__BackingField: 50
     <CamaraMoveSpeed>k__BackingField: 20
     <ZoomSpeed>k__BackingField: 1
@@ -17695,7 +17745,7 @@ Transform:
   m_GameObject: {fileID: 1401683349}
   serializedVersion: 2
   m_LocalRotation: {x: -0.48903218, y: 0.51095784, z: -0.5021169, w: -0.49764267}
-  m_LocalPosition: {x: 22.1, y: 13.3, z: -35.39}
+  m_LocalPosition: {x: 22.1, y: 15, z: -35.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20212,7 +20262,7 @@ GameObject:
   - component: {fileID: 1630118419}
   - component: {fileID: 1630118421}
   - component: {fileID: 1630118423}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: World Collider Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
