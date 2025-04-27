@@ -7563,7 +7563,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputActionAsset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   camaraFollowTarget: {fileID: 415000886}
-  camaraMoveSpeed: 20
+  cinemachineCamera: {fileID: 1401683352}
+  camaraConfig:
+    <EnableEdgePan>k__BackingField: 1
+    <EdgePanSpeed>k__BackingField: 20
+    <EdgePanDistance>k__BackingField: 50
+    <CamaraMoveSpeed>k__BackingField: 20
+    <ZoomSpeed>k__BackingField: 1
+    <MinZoomDistance>k__BackingField: 7.5
+    <MaxZoomDistance>k__BackingField: 15
 --- !u!4 &689484763
 Transform:
   m_ObjectHideFlags: 0
@@ -17600,7 +17608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Composition:
-    ScreenPosition: {x: 0, y: 0}
+    ScreenPosition: {x: 0, y: -0.001650155}
     DeadZone:
       Enabled: 0
       Size: {x: 0.2, y: 0.2}
