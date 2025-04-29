@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
+using System.Collections.Generic;
+using NUnit.Framework;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -20,7 +22,9 @@ public class PlayerInput : MonoBehaviour
     private Vector3 startingTrackedObjectOffset; // 初始的 Tracked Object Offset
     private float zoomStartTime; // 縮放開始的時間
     private bool isZoomingIn = false; // 是否正在縮放
-    private ISelectable selectUnit; //儲存當前所選的物件
+    private List<ISelectable> selectUnits = new List<ISelectable>(12); //儲存當前所選的物件
+    private HashSet<Unit> dragSelectedUnits = new HashSet<Unit>(12); // 儲存框選時選中的單位
+    private HashSet<Unit> aliveUnits = new HashSet<Unit>(100); // 儲存所有存活的單位
 
     private void Awake()
     {
@@ -41,22 +45,17 @@ public class PlayerInput : MonoBehaviour
         //訂閱EventBus
         Bus<SelectedEvent>.OnEvent += HandleSelected; // 訂閱選擇事件
         Bus<UnselectedEvent>.OnEvent += HandleUnselected; // 訂閱取消選擇事件
+        Bus<SpawnUnitEvent>.OnEvent += HandleUnitSpawn; // 訂閱單位出生事件
     }
     private void OnDestroy()
     {
         Bus<SelectedEvent>.Unsubscribe(HandleSelected);
         Bus<UnselectedEvent>.Unsubscribe(HandleUnselected);
-
+        Bus<SpawnUnitEvent>.Unsubscribe(HandleUnitSpawn);
     }
-    private void HandleSelected(SelectedEvent evt)
-    {
-        //選中的事件裡面有儲存被選中的物件
-        selectUnit = evt.SelectdObject; // 設置當前選中的物件
-    }
-    private void HandleUnselected(UnselectedEvent evt)
-    {
-        selectUnit = null;
-    }
+    private void HandleUnitSpawn(SpawnUnitEvent evt) => aliveUnits.Add(evt.SpawnUnit);//當單位出生時，將其添加到存活單位的集合中
+    private void HandleSelected(SelectedEvent evt) => selectUnits.Add(evt.SelectdObject); // 設置當前選中的物件
+    private void HandleUnselected(UnselectedEvent evt) => selectUnits.Remove(evt.SelectdObject); // 移除取消選中的物件
     private void InitCinemachineFollow()
     {
         cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
@@ -88,32 +87,70 @@ public class PlayerInput : MonoBehaviour
         HandleRightClick();
         HandleDragSelection();
     }
-    private void HandleDragSelection(){
-        if(selectionRect == null) return;
-        if(Mouse.current.leftButton.wasPressedThisFrame) // 如果左鍵按下
+    private void HandleDragSelection()
+    {
+        if (selectionRect == null) return;
+        if (Mouse.current.leftButton.wasPressedThisFrame) // 如果左鍵按下
         {
+            selectionRect.sizeDelta = Vector2.zero; // 重置框選遮罩的大小
             selectionRect.gameObject.SetActive(true); // 顯示框選遮罩
             mouseStartPosition = Mouse.current.position.ReadValue(); // 記錄滑鼠開始位置
+            //每次滑鼠點下去時，都要重置drag選取的物件
+            dragSelectedUnits.Clear();
         }
-        else if(Mouse.current.leftButton.isPressed) // 如果左鍵持續按下
+        else if (Mouse.current.leftButton.isPressed) // 如果左鍵持續按下
         {
-            ResizeSelectRect();
+            Bounds selectBounds = ResizeSelectRect();
+            //僅針對活著的單位做處理
+            foreach (Unit unit in aliveUnits)
+            {
+                 // 獲取單位位置的螢幕座標
+                Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
+                //如果該單位的位置在框選範圍內
+                if(selectBounds.Contains(unitPosition)){
+                    //先把他們儲存在dragSelectedUnits，因為要等滑鼠release後，才把他們+進selectedList中
+                    dragSelectedUnits.Add(unit); // 添加到框選的單位集合中
+                }
+
+            }
         }
-        else if(Mouse.current.leftButton.wasReleasedThisFrame) // 如果左鍵釋放
+        else if (Mouse.current.leftButton.wasReleasedThisFrame) // 如果左鍵釋放
         {
+            //取消所有已選的單位
+            DeselectAllUnits();
+            //選新的單位
+            SelectAllDragSelectedUnits();
             selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
         }
     }
-
-    private void ResizeSelectRect()
+    private void SelectAllDragSelectedUnits(){
+        foreach (ISelectable selectable in dragSelectedUnits)
+        {
+            selectable.OnSelect(); // 調用 ISelectable 接口的 OnSelect 方法
+        }
+    }
+    private void DeselectAllUnits()
+    {
+        //不能直接這樣寫，因為OnDeselect會操作SelectUnits，把物件從selectUnits中移除。而疊代中的list，一邊移除裡面的東西會報錯!
+        // foreach (ISelectable selectable in selectUnits)
+        // {
+        //     selectable.OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
+        // }
+        //所以要用for迴圈，從後往前刪除
+        for (int i = selectUnits.Count - 1; i >= 0; i--)
+        {
+            selectUnits[i].OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
+        }
+    }
+    private Bounds ResizeSelectRect()
     {
         Vector2 mouseEndPosition = Mouse.current.position.ReadValue(); // 取得當下的滑鼠位置
         Vector2 start = new Vector2(mouseStartPosition.x, mouseStartPosition.y); // 開始位置
         Vector2 end = new Vector2(mouseEndPosition.x, mouseEndPosition.y); // 結束位置
         selectionRect.anchoredPosition = (start + end) / 2; // 設置框選遮罩的pivit point位置
         selectionRect.sizeDelta = new Vector2(Mathf.Abs(end.x - start.x), Mathf.Abs(end.y - start.y)); // 設置框選遮罩的大小
+        return new Bounds(selectionRect.anchoredPosition, selectionRect.sizeDelta); // 返回框選遮罩的邊界
     }
-
     private void HandleLeftClick()
     {
         if (camera == null) return; // 如果相機未設置，則返回
@@ -121,30 +158,34 @@ public class PlayerInput : MonoBehaviour
         // 檢測左鍵點擊事件 
         if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
-            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (selectUnit != null) // 如果已經有選中的物件
-            {
-                selectUnit.OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
-            }
-            // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
-                 && hit.collider.TryGetComponent(out ISelectable selectable))
-            {
-                // 調用 ISelectable 接口的 OnSelect 方法
-                // 該方法會透過EventBus發送事件，並將自己傳遞給事件
-                selectable.OnSelect(); 
-            }
+            //暫時註解掉,有點難改
+            // Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            // if (selectUnits.Count != 0) // 如果已經有選中的物件
+            // {
+            //     selectUnit.OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
+            // }
+            // // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型
+            // if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
+            //      && hit.collider.TryGetComponent(out ISelectable selectable))
+            // {
+            //     // 調用 ISelectable 接口的 OnSelect 方法
+            //     // 該方法會透過EventBus發送事件，並將自己傳遞給事件
+            //     selectable.OnSelect();
+            // }
         }
     }
     private void HandleRightClick()
     {
-        if (selectUnit == null || selectUnit is not IMoveable moveable) return;
-        if(Mouse.current.rightButton.wasReleasedThisFrame)
+        if (selectUnits.Count == 0) return;
+        if (Mouse.current.rightButton.wasReleasedThisFrame)
         {
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, moveableLayers))
             {
-                moveable.Move(hit.point); // 移動到擊中點
+                foreach(IMoveable moveable in selectUnits) // 遍歷所有選中的物件
+                {
+                    moveable.Move(hit.point); // 移動到擊中點
+                }
             }
         }
     }
@@ -182,7 +223,6 @@ public class PlayerInput : MonoBehaviour
         float zoomTime = Mathf.Clamp01((Time.time - zoomStartTime) * camaraConfig.ZoomSpeed); //用Clamp01限制時間在0到1之間
         cinemachineFollow.FollowOffset = Vector3.Slerp(startingTrackedObjectOffset, targetOffset, zoomTime);
     }
-
     private void HandlePanning()
     {
         // 讀取移動輸入
@@ -200,7 +240,6 @@ public class PlayerInput : MonoBehaviour
         // 這裡的速度是相機跟隨目標的速度
         camaraFollowTarget.linearVelocity = new Vector3(moveX, 0, moveY) * camaraConfig.CamaraMoveSpeed; // 更新相機位置
     }
-
     private Vector2 GetMouseMovement()
     {
         if (!camaraConfig.EnableEdgePan) return Vector2.zero; // 如果未啟用邊緣平移，返回零向量
