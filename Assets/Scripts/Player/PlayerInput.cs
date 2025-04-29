@@ -38,8 +38,25 @@ public class PlayerInput : MonoBehaviour
         }
 
         selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
+        //訂閱EventBus
+        Bus<SelectedEvent>.OnEvent += HandleSelected; // 訂閱選擇事件
+        Bus<UnselectedEvent>.OnEvent += HandleUnselected; // 訂閱取消選擇事件
     }
+    private void OnDestroy()
+    {
+        Bus<SelectedEvent>.Unsubscribe(HandleSelected);
+        Bus<UnselectedEvent>.Unsubscribe(HandleUnselected);
 
+    }
+    private void HandleSelected(SelectedEvent evt)
+    {
+        //選中的事件裡面有儲存被選中的物件
+        selectUnit = evt.SelectdObject; // 設置當前選中的物件
+    }
+    private void HandleUnselected(UnselectedEvent evt)
+    {
+        selectUnit = null;
+    }
     private void InitCinemachineFollow()
     {
         cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
@@ -108,14 +125,14 @@ public class PlayerInput : MonoBehaviour
             if (selectUnit != null) // 如果已經有選中的物件
             {
                 selectUnit.OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
-                selectUnit = null; // 清除選中的物件
             }
             // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型
             if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
                  && hit.collider.TryGetComponent(out ISelectable selectable))
             {
-                selectable.OnSelect(); // 調用 ISelectable 接口的 OnSelect 方法
-                selectUnit = selectable; // 設置當前選中的物件
+                // 調用 ISelectable 接口的 OnSelect 方法
+                // 該方法會透過EventBus發送事件，並將自己傳遞給事件
+                selectable.OnSelect(); 
             }
         }
     }

@@ -20,11 +20,14 @@ public class Worker : MonoBehaviour , ISelectable, IMoveable
     public void OnSelect()
     {
         onSelectDecal.gameObject.SetActive(true); // Enable the decal projector
+        //發送被選到的事件
+        Bus<SelectedEvent>.Publish(new SelectedEvent(this));
     }
 
     public void OnDeselect()
     {
         onSelectDecal.gameObject.SetActive(false); // Disable the decal projector when deselected
+        Bus<UnselectedEvent>.Publish(new UnselectedEvent(this));
     }
 
     public void Move(Vector3 direction)
