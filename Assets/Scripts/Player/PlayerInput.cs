@@ -12,7 +12,9 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] CamaraConfig camaraConfig; // 引用相機配置類別
     [SerializeField] private LayerMask selectableLayers; // 可被玩家選擇的圖層有哪些
     [SerializeField] private LayerMask moveableLayers; // 可供移動的圖層
+    [SerializeField] private RectTransform selectionRect; // 框選的遮罩
 
+    private Vector2 mouseStartPosition; // 滑鼠開始位置
     private InputAction moveAction;
     private CinemachineFollow cinemachineFollow; // 引用 CinemachineFollow 組件
     private Vector3 startingTrackedObjectOffset; // 初始的 Tracked Object Offset
@@ -34,6 +36,8 @@ public class PlayerInput : MonoBehaviour
         {
             Debug.LogError("CinemachineCamera is not assigned!");
         }
+
+        selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
     }
 
     private void InitCinemachineFollow()
@@ -65,7 +69,34 @@ public class PlayerInput : MonoBehaviour
         HandlePanning();
         HandleLeftClick();
         HandleRightClick();
+        HandleDragSelection();
     }
+    private void HandleDragSelection(){
+        if(selectionRect == null) return;
+        if(Mouse.current.leftButton.wasPressedThisFrame) // 如果左鍵按下
+        {
+            selectionRect.gameObject.SetActive(true); // 顯示框選遮罩
+            mouseStartPosition = Mouse.current.position.ReadValue(); // 記錄滑鼠開始位置
+        }
+        else if(Mouse.current.leftButton.isPressed) // 如果左鍵持續按下
+        {
+            ResizeSelectRect();
+        }
+        else if(Mouse.current.leftButton.wasReleasedThisFrame) // 如果左鍵釋放
+        {
+            selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
+        }
+    }
+
+    private void ResizeSelectRect()
+    {
+        Vector2 mouseEndPosition = Mouse.current.position.ReadValue(); // 取得當下的滑鼠位置
+        Vector2 start = new Vector2(mouseStartPosition.x, mouseStartPosition.y); // 開始位置
+        Vector2 end = new Vector2(mouseEndPosition.x, mouseEndPosition.y); // 結束位置
+        selectionRect.anchoredPosition = (start + end) / 2; // 設置框選遮罩的pivit point位置
+        selectionRect.sizeDelta = new Vector2(Mathf.Abs(end.x - start.x), Mathf.Abs(end.y - start.y)); // 設置框選遮罩的大小
+    }
+
     private void HandleLeftClick()
     {
         if (camera == null) return; // 如果相機未設置，則返回
