@@ -7658,7 +7658,10 @@ MonoBehaviour:
     <MaxZoomDistance>k__BackingField: 15
   selectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 192
+  moveableLayers:
+    serializedVersion: 2
+    m_Bits: 272
 --- !u!4 &689484763
 Transform:
   m_ObjectHideFlags: 0
@@ -17233,7 +17236,7 @@ GameObject:
   - component: {fileID: 1387778862}
   - component: {fileID: 1387778861}
   - component: {fileID: 1387778860}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24991,7 +24994,7 @@ GameObject:
   - component: {fileID: 1933012997}
   - component: {fileID: 1933012996}
   - component: {fileID: 1933012995}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,6 +11,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] new Camera camera; // 引用 Unity 的 Camera 類別(給Racast使用), 把Main Camera拖進來
     [SerializeField] CamaraConfig camaraConfig; // 引用相機配置類別
     [SerializeField] private LayerMask selectableLayers; // 可被玩家選擇的圖層有哪些
+    [SerializeField] private LayerMask moveableLayers; // 可供移動的圖層
 
     private InputAction moveAction;
     private CinemachineFollow cinemachineFollow; // 引用 CinemachineFollow 組件
@@ -63,15 +64,16 @@ public class PlayerInput : MonoBehaviour
         HandleZooming();
         HandlePanning();
         HandleLeftClick();
+        HandleRightClick();
     }
     private void HandleLeftClick()
     {
         if (camera == null) return; // 如果相機未設置，則返回
         // 射線從相機發射到滑鼠位置
-        Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
         // 檢測左鍵點擊事件 
         if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (selectUnit != null) // 如果已經有選中的物件
             {
                 selectUnit.OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
@@ -86,7 +88,18 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
-
+    private void HandleRightClick()
+    {
+        if (selectUnit == null || selectUnit is not IMoveable moveable) return;
+        if(Mouse.current.rightButton.wasReleasedThisFrame)
+        {
+            Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, moveableLayers))
+            {
+                moveable.Move(hit.point); // 移動到擊中點
+            }
+        }
+    }
     private void HandleZooming()
     {
         if (cinemachineCamera == null) return;
