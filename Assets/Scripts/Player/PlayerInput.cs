@@ -4,16 +4,20 @@ using Unity.Cinemachine;
 
 public class PlayerInput : MonoBehaviour
 {
+    // 引用現有的 Input System 資源和相機配置類別
     [SerializeField] InputActionAsset inputActionAsset; // 引用現有的 Input System 資源
     [SerializeField] Rigidbody camaraFollowTarget; // 相機跟隨的物件
-    [SerializeField] CinemachineCamera cinemachineCamera; // 引用 Cinemachine 攝影機
+    [SerializeField] CinemachineCamera cinemachineCamera; // 引用 Cinemachine 攝影機 
+    [SerializeField] new Camera camera; // 引用 Unity 的 Camera 類別(給Racast使用), 把Main Camera拖進來
     [SerializeField] CamaraConfig camaraConfig; // 引用相機配置類別
+    [SerializeField] private LayerMask selectableLayers; // 可被玩家選擇的圖層有哪些
 
     private InputAction moveAction;
     private CinemachineFollow cinemachineFollow; // 引用 CinemachineFollow 組件
     private Vector3 startingTrackedObjectOffset; // 初始的 Tracked Object Offset
     private float zoomStartTime; // 縮放開始的時間
     private bool isZoomingIn = false; // 是否正在縮放
+    private ISelectable selectUnit; //儲存當前所選的物件
 
     private void Awake()
     {
@@ -58,6 +62,29 @@ public class PlayerInput : MonoBehaviour
     {
         HandleZooming();
         HandlePanning();
+        HandleLeftClick();
+    }
+    private void HandleLeftClick()
+    {
+        if (camera == null) return; // 如果相機未設置，則返回
+        // 射線從相機發射到滑鼠位置
+        Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        // 檢測左鍵點擊事件 
+        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        {
+            if (selectUnit != null) // 如果已經有選中的物件
+            {
+                selectUnit.OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
+                selectUnit = null; // 清除選中的物件
+            }
+            // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
+                 && hit.collider.TryGetComponent(out ISelectable selectable))
+            {
+                selectable.OnSelect(); // 調用 ISelectable 接口的 OnSelect 方法
+                selectUnit = selectable; // 設置當前選中的物件
+            }
+        }
     }
 
     private void HandleZooming()
@@ -98,7 +125,7 @@ public class PlayerInput : MonoBehaviour
     private void HandlePanning()
     {
         // 讀取移動輸入
-        Vector2 moveInput = moveAction.ReadValue<Vector2>(); 
+        Vector2 moveInput = moveAction.ReadValue<Vector2>();
         float moveX = moveInput.x;
         float moveY = moveInput.y;
 
