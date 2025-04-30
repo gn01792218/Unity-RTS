@@ -54,7 +54,7 @@ public class PlayerInput : MonoBehaviour
         Bus<SpawnUnitEvent>.Unsubscribe(HandleUnitSpawn);
     }
     private void HandleUnitSpawn(SpawnUnitEvent evt) => aliveUnits.Add(evt.SpawnUnit);//當單位出生時，將其添加到存活單位的集合中
-    private void HandleSelected(SelectedEvent evt) => selectUnits.Add(evt.SelectdObject); // 設置當前選中的物件
+    private void HandleSelected(SelectedEvent evt) => selectUnits.Add(evt.SelectdObject); // 將被選到的物件添加到selectUnits中
     private void HandleUnselected(UnselectedEvent evt) => selectUnits.Remove(evt.SelectdObject); // 移除取消選中的物件
     private void InitCinemachineFollow()
     {
@@ -83,47 +83,67 @@ public class PlayerInput : MonoBehaviour
     {
         HandleZooming();
         HandlePanning();
-        HandleLeftClick();
+        HandleUnitSelection();
         HandleRightClick();
-        HandleDragSelection();
     }
-    private void HandleDragSelection()
+    private void HandleUnitSelection()
     {
         if (selectionRect == null) return;
         if (Mouse.current.leftButton.wasPressedThisFrame) // 如果左鍵按下
         {
-            selectionRect.sizeDelta = Vector2.zero; // 重置框選遮罩的大小
-            selectionRect.gameObject.SetActive(true); // 顯示框選遮罩
-            mouseStartPosition = Mouse.current.position.ReadValue(); // 記錄滑鼠開始位置
-            //每次滑鼠點下去時，都要重置drag選取的物件
-            dragSelectedUnits.Clear();
+            HandleLeftClickPressed();
         }
         else if (Mouse.current.leftButton.isPressed) // 如果左鍵持續按下
         {
-            Bounds selectBounds = ResizeSelectRect();
-            //僅針對活著的單位做處理
-            foreach (Unit unit in aliveUnits)
-            {
-                 // 獲取單位位置的螢幕座標
-                Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
-                //如果該單位的位置在框選範圍內
-                if(selectBounds.Contains(unitPosition)){
-                    //先把他們儲存在dragSelectedUnits，因為要等滑鼠release後，才把他們+進selectedList中
-                    dragSelectedUnits.Add(unit); // 添加到框選的單位集合中
-                }
-
-            }
+            HandleLeftDrag();
         }
         else if (Mouse.current.leftButton.wasReleasedThisFrame) // 如果左鍵釋放
         {
-            //取消所有已選的單位
-            DeselectAllUnits();
-            //選新的單位
-            SelectAllDragSelectedUnits();
-            selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
+            HandleLeftClickRelease();
         }
     }
-    private void SelectAllDragSelectedUnits(){
+
+    private void HandleLeftClickPressed()
+    {
+        selectionRect.sizeDelta = Vector2.zero; // 重置框選遮罩的大小
+        selectionRect.gameObject.SetActive(true); // 顯示框選遮罩
+        mouseStartPosition = Mouse.current.position.ReadValue(); // 記錄滑鼠開始位置
+                                                                 //每次滑鼠點下去時，都要重置drag選取的物件
+        dragSelectedUnits.Clear();
+    }
+    private void HandleLeftDrag()
+    {
+        Bounds selectBounds = ResizeSelectRect();
+        //僅針對活著的單位做處理
+        foreach (Unit unit in aliveUnits)
+        {
+            // 獲取單位位置的螢幕座標
+            Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
+            //如果該單位的位置在框選範圍內
+            if (selectBounds.Contains(unitPosition))
+            {
+                //先把他們儲存在dragSelectedUnits，因為要等滑鼠release後，才把他們+進selectedList中
+                dragSelectedUnits.Add(unit); // 添加到框選的單位集合中
+            }
+        }
+    }
+    private void HandleLeftClickRelease()
+    {
+        //取消所有已選的單位
+        //只有當沒有按下Shift鍵時，才會取消所有已選的單位
+        if(!Keyboard.current.shiftKey.isPressed)
+        {
+            DeselectAllUnits();
+        }
+        //處理左鍵單選,裡面會用雷射射線去選擇被點到的單位，
+        //將被選到的也會被添加進selectUnits中
+        HandleSelectSingleUnit();
+        //處理框選的單位
+        SelectAllDragSelectedUnits();
+        selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
+    }
+    private void SelectAllDragSelectedUnits()
+    {
         foreach (ISelectable selectable in dragSelectedUnits)
         {
             selectable.OnSelect(); // 調用 ISelectable 接口的 OnSelect 方法
@@ -151,27 +171,17 @@ public class PlayerInput : MonoBehaviour
         selectionRect.sizeDelta = new Vector2(Mathf.Abs(end.x - start.x), Mathf.Abs(end.y - start.y)); // 設置框選遮罩的大小
         return new Bounds(selectionRect.anchoredPosition, selectionRect.sizeDelta); // 返回框選遮罩的邊界
     }
-    private void HandleLeftClick()
+    private void HandleSelectSingleUnit()
     {
-        if (camera == null) return; // 如果相機未設置，則返回
         // 射線從相機發射到滑鼠位置
-        // 檢測左鍵點擊事件 
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型
+        if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
+             && hit.collider.TryGetComponent(out ISelectable selectable))
         {
-            //暫時註解掉,有點難改
-            // Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            // if (selectUnits.Count != 0) // 如果已經有選中的物件
-            // {
-            //     selectUnit.OnDeselect(); // 調用 ISelectable 接口的 OnDeselect 方法
-            // }
-            // // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型
-            // if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
-            //      && hit.collider.TryGetComponent(out ISelectable selectable))
-            // {
-            //     // 調用 ISelectable 接口的 OnSelect 方法
-            //     // 該方法會透過EventBus發送事件，並將自己傳遞給事件
-            //     selectable.OnSelect();
-            // }
+            // 調用 ISelectable 接口的 OnSelect 方法
+            // 該方法會透過EventBus發送事件，並將自己傳遞給事件
+            selectable.OnSelect();
         }
     }
     private void HandleRightClick()
@@ -182,7 +192,7 @@ public class PlayerInput : MonoBehaviour
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, moveableLayers))
             {
-                foreach(IMoveable moveable in selectUnits) // 遍歷所有選中的物件
+                foreach (IMoveable moveable in selectUnits) // 遍歷所有選中的物件
                 {
                     moveable.Move(hit.point); // 移動到擊中點
                 }

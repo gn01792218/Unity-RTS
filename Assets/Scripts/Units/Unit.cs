@@ -22,13 +22,16 @@ public abstract class Unit: MonoBehaviour , ISelectable, IMoveable{
     public void OnSelect()
     {
         onSelectDecal.gameObject.SetActive(true); // Enable the decal projector
-        //發送被選到的事件
+        //發送被選到的事件,
+        // ps.監聽事件者要負責將該單位添加到選取列表中
         Bus<SelectedEvent>.Publish(new SelectedEvent(this));
     }
 
     public void OnDeselect()
     {
         onSelectDecal.gameObject.SetActive(false); // Disable the decal projector when deselected
+        //發送取消選取的事件
+        // ps.監聽事件者要負責將該單位從選取列表中移除
         Bus<UnselectedEvent>.Publish(new UnselectedEvent(this));
     }
 
