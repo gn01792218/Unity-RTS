@@ -7,6 +7,7 @@ using UnityEngine.Rendering.Universal;
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Unit: MonoBehaviour , ISelectable, IMoveable{
     [SerializeField] private DecalProjector onSelectDecal; // 被選中時的標籤貼紙
+    public float AgentRadius => agent.radius; //獲取NavMeshAgent的半徑
     private NavMeshAgent agent; //獲取NavMeshAgent組件
     void Awake()
     {

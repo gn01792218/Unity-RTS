@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using System.Collections.Generic;
 using NUnit.Framework;
+using System;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -192,10 +193,54 @@ public class PlayerInput : MonoBehaviour
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, moveableLayers))
             {
-                foreach (IMoveable moveable in selectUnits) // 遍歷所有選中的物件
+                //由於需要的agent radius在Unit類別裡面
+                //這裡暫時轉換一下，之後要重構
+                List<Unit> Units = new (selectUnits.Count);
+                foreach (ISelectable selectable in selectUnits) // 遍歷所有選中的物件
                 {
-                    moveable.Move(hit.point); // 移動到擊中點
+                    if (selectable is Unit unit) // 如果是Unit類別的話
+                    {
+                        Units.Add(unit); // 添加到列表中
+                    }
                 }
+
+                 //開始避免Dancing的移動演算法
+                int unitsOnRing = 0; //計算當前有多少單位在這一圈上
+                int maxUnitsOnRing = 1; //這一圈最多可以放多少單位
+                float circleRadius = 0; //這一圈的半徑
+                float circleRadiaOffset = 2.5f; //這一圈的半徑偏移量, 用2會和內圈黏在一起，看起來有點噁心
+                float unitOnRingsAngle = 0; //這一圈擺放單位的平均角度
+
+                foreach(Unit unit in Units) // 遍歷所有選中的物件
+                {
+                    //移動點位的計算
+                    //一開始就是hit.point，因為第一圈半徑是0
+                    //然後還要加上單位的半徑、及圈上的座標點(透過sin和cos計算出來的)
+                    //才不會重疊
+                    Vector3 targetPosition = new (
+                        hit.point.x + circleRadius * Mathf.Cos(unitOnRingsAngle * unitsOnRing), //往後每一圈的半徑都要+上去
+                        hit.point.y,  //這是高度，不需要+
+                        hit.point.z + circleRadius * Mathf.Sin(unitOnRingsAngle * unitsOnRing) //往後每一圈的半徑都要+上去
+                    );
+                    unit.Move(targetPosition); // 移動到擊中點
+                    unitsOnRing++;
+
+                    //當到達一圈的上限時，開始準備下一圈的初始化作業
+                    if (unitsOnRing >= maxUnitsOnRing) // 如果已經達到最大單位數量
+                    {
+                        // 1.重置當前單位數量
+                        unitsOnRing = 0; 
+                        //2.根據該單位的半徑，計算下一圈的半徑要多大(至少要*2以上唷)
+                        circleRadius += unit.AgentRadius * circleRadiaOffset;  //*2就會剛好和內圈黏在一起，因此可以考慮*3
+                        //3.計算下一圈可以放多少單位
+                        maxUnitsOnRing = Mathf.FloorToInt(2 * Mathf.PI * circleRadius / (unit.AgentRadius*2));
+                        //4.計算這一圈單位之間擺放的平均角度
+                        unitOnRingsAngle = 2 * Mathf.PI / maxUnitsOnRing; //用360度/這一圈可以放的總單位
+                    }
+                }
+                //完成後，切記將Unit的Agent的StopDistance設為0，這樣才會排出完美的圓圈唷!
+                //否則會有些許誤差~就停下來，導致圓圈不美麗
+                //當然如果想要有比較隨興的排列，那麼也可以不要歸0
             }
         }
     }
