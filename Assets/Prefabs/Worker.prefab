@@ -2027,6 +2027,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3afd8fbd5880eaf4abbe3a4718e11010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   unitSO: {fileID: 11400000, guid: 6bd16236e4b26574ba5a85094f13101e, type: 2}

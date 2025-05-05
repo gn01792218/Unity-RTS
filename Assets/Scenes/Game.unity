@@ -21075,11 +21075,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28bb4bc776fd5ba429a1217edea32ee3, type: 3}
---- !u!4 &1620336445 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7844939680280228518, guid: 28bb4bc776fd5ba429a1217edea32ee3, type: 3}
-  m_PrefabInstance: {fileID: 1620336444}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1620895796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28383,18 +28378,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2547257448993174714, guid: 28bb4bc776fd5ba429a1217edea32ee3, type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 1620336445}
-    - target: {fileID: 2547257448993174714, guid: 28bb4bc776fd5ba429a1217edea32ee3, type: 3}
-      propertyPath: unitSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 6bd16236e4b26574ba5a85094f13101e, type: 2}
-    - target: {fileID: 5340893138575514852, guid: 28bb4bc776fd5ba429a1217edea32ee3, type: 3}
-      propertyPath: m_StoppingDistance
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7844939680280228518, guid: 28bb4bc776fd5ba429a1217edea32ee3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.83

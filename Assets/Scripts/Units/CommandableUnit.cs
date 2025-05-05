@@ -3,6 +3,7 @@ using UnityEngine.Rendering.Universal;
 
 public abstract class CommandableUnit : MonoBehaviour, ISelectable
 {
+    [field: SerializeField] public Command[] AvailableCommands { get; private set; } //裝載各種指令
     [field: SerializeField] public float CurrentHealth { get; private set; }
     [field: SerializeField] public float MaxHealth { get; private set; }
     [SerializeField] private UnitSO unitSO; // 這個單位的數據
