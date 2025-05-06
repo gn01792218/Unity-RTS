@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CommandUI : MonoBehaviour
 {
@@ -11,9 +12,12 @@ public class CommandUI : MonoBehaviour
         Bus<SelectedEvent>.OnEvent += HandleUnitSelected;
         Bus<UnselectedEvent>.OnEvent += HandleUnitUnselected;
 
+    }
+    private void Start() //和Componant相關的在Start使用
+    {
         //初始化按鈕
         foreach(CommandButton button in commandButtons){
-            button.SetIcon(null);
+            button.Disable();
         }
     }
     private void ODestroy()
@@ -46,12 +50,16 @@ public class CommandUI : MonoBehaviour
         for(int i =0; i< commandButtons.Length; i++){
             Command commandForSlot = availableCommands.Where(command => command.SlotIndex == i).FirstOrDefault();
             if(commandForSlot != null){
-                commandButtons[i].SetIcon(commandForSlot.Icon);
+                commandButtons[i].EnableFor(commandForSlot, HandleClick(commandForSlot));
             }
             else
             {
-                commandButtons[i].SetIcon(null);
+                commandButtons[i].Disable();
             }
         }
+    }
+    private UnityAction HandleClick(Command command)
+    {
+        return ()=> Bus<CommandSelectedEvent>.Publish(new CommandSelectedEvent(command)); //點擊時發送該指令事件
     }
 }

@@ -4,6 +4,8 @@ using Unity.Cinemachine;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System;
+using System.Linq;
+using UnityEngine.EventSystems;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -19,6 +21,8 @@ public class PlayerInput : MonoBehaviour
 
     private Vector2 mouseStartPosition; // 滑鼠開始位置
     private InputAction moveAction;
+    private Command activeCommand;
+    private bool wasMouseDownOnUI; //滑鼠是否點在UI上面?
     private CinemachineFollow cinemachineFollow; // 引用 CinemachineFollow 組件
     private Vector3 startingTrackedObjectOffset; // 初始的 Tracked Object Offset
     private float zoomStartTime; // 縮放開始的時間
@@ -47,16 +51,19 @@ public class PlayerInput : MonoBehaviour
         Bus<SelectedEvent>.OnEvent += HandleSelected; // 訂閱選擇事件
         Bus<UnselectedEvent>.OnEvent += HandleUnselected; // 訂閱取消選擇事件
         Bus<SpawnUnitEvent>.OnEvent += HandleUnitSpawn; // 訂閱單位出生事件
+        Bus<CommandSelectedEvent>.OnEvent += HandleCommandSelected; //訂閱指令事件
     }
     private void OnDestroy()
     {
         Bus<SelectedEvent>.Unsubscribe(HandleSelected);
         Bus<UnselectedEvent>.Unsubscribe(HandleUnselected);
         Bus<SpawnUnitEvent>.Unsubscribe(HandleUnitSpawn);
+        Bus<CommandSelectedEvent>.Unsubscribe(HandleCommandSelected);
     }
     private void HandleUnitSpawn(SpawnUnitEvent evt) => aliveUnits.Add(evt.SpawnUnit);//當單位出生時，將其添加到存活單位的集合中
     private void HandleSelected(SelectedEvent evt) => selectUnits.Add(evt.SelectdObject); // 將被選到的物件添加到selectUnits中
     private void HandleUnselected(UnselectedEvent evt) => selectUnits.Remove(evt.SelectdObject); // 移除取消選中的物件
+    private void HandleCommandSelected(CommandSelectedEvent evt) => activeCommand = evt.SelectdCommand;
     private void InitCinemachineFollow()
     {
         cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
@@ -103,7 +110,6 @@ public class PlayerInput : MonoBehaviour
             HandleLeftClickRelease();
         }
     }
-
     private void HandleLeftClickPressed()
     {
         selectionRect.sizeDelta = Vector2.zero; // 重置框選遮罩的大小
@@ -111,9 +117,11 @@ public class PlayerInput : MonoBehaviour
         mouseStartPosition = Mouse.current.position.ReadValue(); // 記錄滑鼠開始位置
                                                                  //每次滑鼠點下去時，都要重置drag選取的物件
         dragSelectedUnits.Clear();
+        wasMouseDownOnUI = EventSystem.current.IsPointerOverGameObject(); //標示點到UI上
     }
     private void HandleLeftDrag()
     {
+        if(activeCommand !=null || wasMouseDownOnUI) return; //如果有指令 或是 滑鼠在UI介面上，就返回
         Bounds selectBounds = ResizeSelectRect();
         //僅針對活著的單位做處理
         foreach (Unit unit in aliveUnits)
@@ -132,7 +140,8 @@ public class PlayerInput : MonoBehaviour
     {
         //取消所有已選的單位
         //只有當沒有按下Shift鍵時，才會取消所有已選的單位
-        if(!Keyboard.current.shiftKey.isPressed)
+        //且沒有當前指令的時候
+        if (!Keyboard.current.shiftKey.isPressed && activeCommand == null)
         {
             DeselectAllUnits();
         }
@@ -176,13 +185,30 @@ public class PlayerInput : MonoBehaviour
     {
         // 射線從相機發射到滑鼠位置
         Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型
-        if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
+        // 射線擊中物體  && 擊中物體是 ISelectable 接口的實現類型 && 沒有當前指令時
+        if (activeCommand == null
+            && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, selectableLayers)
              && hit.collider.TryGetComponent(out ISelectable selectable))
         {
             // 調用 ISelectable 接口的 OnSelect 方法
             // 該方法會透過EventBus發送事件，並將自己傳遞給事件
             selectable.OnSelect();
+        }
+        else if (activeCommand != null // 射線擊中地板時 && 不是點在UI上  && 有當前指令時 
+                && !wasMouseDownOnUI
+                && Physics.Raycast(cameraRay, out hit, float.MaxValue, moveableLayers))
+        {
+            List<Unit> units = selectUnits
+                .Where((unit) => unit is Unit) //Where 方法只會篩選符合條件的元素，但不會自動轉換元素的型態；
+                .Cast<Unit>() //使用 Cast 方法將篩選後的元素顯式轉換為指定的型態。
+                .ToList();
+
+            for(int i =0; i< units.Count; i++)
+            {
+                CommandContext context = new(units[i], hit, i);
+                activeCommand.Handle(context);
+            }
+            activeCommand = null; //執行完之後清除掉, 代表已經執行完成
         }
     }
     private void HandleRightClick()
@@ -195,7 +221,7 @@ public class PlayerInput : MonoBehaviour
             {
                 //由於需要的agent radius在Unit類別裡面
                 //這裡暫時轉換一下，之後要重構
-                List<Unit> units = new (selectUnits.Count);
+                List<Unit> units = new(selectUnits.Count);
                 foreach (ISelectable selectable in selectUnits) // 遍歷所有選中的物件
                 {
                     if (selectable is Unit unit) // 如果是Unit類別的話
@@ -203,9 +229,9 @@ public class PlayerInput : MonoBehaviour
                         units.Add(unit); // 添加到列表中
                     }
                 }
-                for( int i = 0 ; i< units.Count; i++ ) // 遍歷所有選中的物件
+                for (int i = 0; i < units.Count; i++) // 遍歷所有選中的物件
                 {
-                    CommandContext context = new (units[i], hit, i);
+                    CommandContext context = new(units[i], hit, i);
                     foreach (Command command in units[i].AvailableCommands) // 遍歷所有可用的指令
                     {
                         if (command.CanHandle(context)) // 如果該指令可以處理這個單位和擊中點
@@ -214,7 +240,7 @@ public class PlayerInput : MonoBehaviour
                             break; //執行到後就結束
                         }
                     }
-                    
+
                 }
             }
         }
