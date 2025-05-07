@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))] //掛上此腳本會強制送一個Button唷!
-public class CommandButton : MonoBehaviour
+public class CommandButton : MonoBehaviour, IUIElement<Command, UnityAction>
 {
     [SerializeField] private Image icon;
     private Button button;
