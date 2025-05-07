@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4292a2553e2eac34aa0908db847fe2d3, type: 3}
   m_Name: AirTransportSO
   m_EditorClassIdentifier: 
+  <Prefab>k__BackingField: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
+  <BuildTime>k__BackingField: 10
   <Health>k__BackingField: 200

@@ -63,7 +63,14 @@ public class PlayerInput : MonoBehaviour
     private void HandleUnitSpawn(SpawnUnitEvent evt) => aliveUnits.Add(evt.SpawnUnit);//當單位出生時，將其添加到存活單位的集合中
     private void HandleSelected(SelectedEvent evt) => selectUnits.Add(evt.SelectdObject); // 將被選到的物件添加到selectUnits中
     private void HandleUnselected(UnselectedEvent evt) => selectUnits.Remove(evt.SelectdObject); // 移除取消選中的物件
-    private void HandleCommandSelected(CommandSelectedEvent evt) => activeCommand = evt.SelectdCommand;
+    private void HandleCommandSelected(CommandSelectedEvent evt) 
+    {
+        activeCommand = evt.SelectdCommand;
+        if(!activeCommand.RequiresClickToActive) //處理按下按鈕立即執行的指令
+        {
+            ActivateCommand(new RaycastHit());
+        }
+    }
     private void InitCinemachineFollow()
     {
         cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
@@ -141,7 +148,8 @@ public class PlayerInput : MonoBehaviour
         //取消所有已選的單位
         //只有當沒有按下Shift鍵時，才會取消所有已選的單位
         //且沒有當前指令的時候
-        if (!Keyboard.current.shiftKey.isPressed && activeCommand == null)
+        //且沒有點在UI介面上
+        if (!Keyboard.current.shiftKey.isPressed && activeCommand == null && !wasMouseDownOnUI)
         {
             DeselectAllUnits();
         }
@@ -198,19 +206,24 @@ public class PlayerInput : MonoBehaviour
                 && !wasMouseDownOnUI
                 && Physics.Raycast(cameraRay, out hit, float.MaxValue, moveableLayers))
         {
-            List<Unit> units = selectUnits
-                .Where((unit) => unit is Unit) //Where 方法只會篩選符合條件的元素，但不會自動轉換元素的型態；
-                .Cast<Unit>() //使用 Cast 方法將篩選後的元素顯式轉換為指定的型態。
-                .ToList();
-
-            for(int i =0; i< units.Count; i++)
-            {
-                CommandContext context = new(units[i], hit, i);
-                activeCommand.Handle(context);
-            }
-            activeCommand = null; //執行完之後清除掉, 代表已經執行完成
+            ActivateCommand(hit);
         }
     }
+    private void ActivateCommand(RaycastHit hit)
+    {
+        List<CommandableUnit> units = selectUnits
+                        .Where((unit) => unit is CommandableUnit) //Where 方法只會篩選符合條件的元素，但不會自動轉換元素的型態；
+                        .Cast<CommandableUnit>() //使用 Cast 方法將篩選後的元素顯式轉換為指定的型態。
+                        .ToList();
+
+        for (int i = 0; i < units.Count; i++)
+        {
+            CommandContext context = new(units[i], hit, i);
+            activeCommand.Handle(context);
+        }
+        activeCommand = null; //執行完之後清除掉, 代表已經執行完成
+    }
+
     private void HandleRightClick()
     {
         if (selectUnits.Count == 0) return;

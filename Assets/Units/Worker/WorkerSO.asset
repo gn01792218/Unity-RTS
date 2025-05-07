@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4292a2553e2eac34aa0908db847fe2d3, type: 3}
   m_Name: WorkerSO
   m_EditorClassIdentifier: 
+  <Prefab>k__BackingField: {fileID: 2121919384460996091, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+  <BuildTime>k__BackingField: 3
   <Health>k__BackingField: 50

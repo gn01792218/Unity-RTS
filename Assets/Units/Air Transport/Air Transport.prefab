@@ -59,7 +59,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 0
+  m_ObstacleAvoidanceType: 4
 --- !u!95 &1974153333601261373
 Animator:
   serializedVersion: 7
@@ -144,6 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3afd8fbd5880eaf4abbe3a4718e11010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   unitSO: {fileID: 11400000, guid: ac67e6967080a28438515bafd8d108b6, type: 2}
