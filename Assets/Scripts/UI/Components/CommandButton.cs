@@ -10,6 +10,7 @@ public class CommandButton : MonoBehaviour, IUIElement<Command, UnityAction>
     private void Awake()
     {
         button = GetComponent<Button>();
+        Disable();
     }
     public void EnableFor(Command command, UnityAction onClick)
     {

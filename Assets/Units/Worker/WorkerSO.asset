@@ -15,3 +15,4 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 2121919384460996091, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
   <BuildTime>k__BackingField: 3
   <Health>k__BackingField: 50
+  <Icon>k__BackingField: {fileID: 21300000, guid: 6e40afd6361ffe44a87846d98dd04e7c, type: 3}

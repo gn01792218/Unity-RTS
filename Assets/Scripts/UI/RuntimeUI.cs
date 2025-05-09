@@ -4,11 +4,17 @@ using UnityEngine;
 public class RuntimeUI : MonoBehaviour
 {
     [SerializeField] private CommandUI commandUI;
+    [SerializeField] private BuildBuildingUI buildBuildingUI;
     private HashSet<CommandableUnit> selectedUnits = new(12);
     private void Awake()
     {
         Bus<SelectedEvent>.OnEvent += HandleUnitSelected;
         Bus<UnselectedEvent>.OnEvent += HandleUnitUnselected;
+    }
+    private void Start()
+    {
+        commandUI.Disable();
+        buildBuildingUI.Disable();
     }
     private void ODestroy()
     {
@@ -21,6 +27,11 @@ public class RuntimeUI : MonoBehaviour
         {
             selectedUnits.Add(unit);
             commandUI.EnableFor(selectedUnits);
+            
+        }
+        if(evt.SelectdObject is BuildingUnit building && selectedUnits.Count == 1 ) //只有單選到building才會顯示唷
+        {
+            buildBuildingUI.EnableFor(building);
         }
     }
     private void HandleUnitUnselected(UnselectedEvent evt)
@@ -29,7 +40,10 @@ public class RuntimeUI : MonoBehaviour
         {
             selectedUnits.Remove(unit);
             commandUI.Disable();
+            if(unit is BuildingUnit)
+            {
+                buildBuildingUI.Disable();
+            }
         }
     }
-
 }

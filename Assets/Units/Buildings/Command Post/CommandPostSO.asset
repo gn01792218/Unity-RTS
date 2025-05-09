@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4292a2553e2eac34aa0908db847fe2d3, type: 3}
   m_Name: CommandPostSO
   m_EditorClassIdentifier: 
+  <Prefab>k__BackingField: {fileID: 1589499662120937400, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
+  <BuildTime>k__BackingField: 0
   <Health>k__BackingField: 500
+  <Icon>k__BackingField: {fileID: 21300000, guid: dfebbdf93f58d764ab9aa4d54edd629e, type: 3}
