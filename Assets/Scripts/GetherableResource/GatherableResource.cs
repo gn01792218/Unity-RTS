@@ -13,7 +13,7 @@ public class GatherableResource : MonoBehaviour, IGatherable
         Amount = resourceSO.MaxAmount;
     }
 
-    public bool BeinGather()
+    public bool BeginGather()
     {
         if (IsBusy) return false; //已經有人採時，回傳false不給採
 

@@ -17895,6 +17895,9 @@ MonoBehaviour:
   selectableLayers:
     serializedVersion: 2
     m_Bits: 192
+  interactableLayers:
+    serializedVersion: 2
+    m_Bits: 704
   moveableLayers:
     serializedVersion: 2
     m_Bits: 272
@@ -60551,6 +60554,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Worker
       objectReference: {fileID: 0}
+    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+      propertyPath: <AvailableCommands>k__BackingField.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 7f2f993dec6a6c044b5c41f61bf2e5a0, type: 2}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.83

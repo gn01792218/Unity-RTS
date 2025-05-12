@@ -10,7 +10,7 @@ public abstract class Unit:CommandableUnit, IMoveable
 {
     public float AgentRadius => agent.radius; //獲取NavMeshAgent的半徑
     private NavMeshAgent agent; //獲取NavMeshAgent組件
-    private BehaviorGraphAgent behaviorAgent;
+    protected BehaviorGraphAgent behaviorAgent;
     protected override void Awake()
     {
         base.Awake(); //呼叫父類的Awake方法
@@ -20,7 +20,6 @@ public abstract class Unit:CommandableUnit, IMoveable
     protected override void Start(){
         base.Start(); //呼叫父類的Start方法
         Bus<SpawnUnitEvent>.Publish(new SpawnUnitEvent(this)); //發送自己已經出生的消息
-        Move(transform.position); //一開始移動到自己出生的位置就好，不然會跑到該物件prefab的初始位置唷!
     }
 
     public void Move(Vector3 direction)
@@ -30,10 +29,11 @@ public abstract class Unit:CommandableUnit, IMoveable
 
         //改透過BehaviorAgent
         behaviorAgent.SetVariableValue("TargetLocation", direction); //"TargetLocation"對應該Behavior中的Blackboard中的變數
+        behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Move);
     }
 
     public void Stop()
     {
-        throw new System.NotImplementedException();
+        behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Stop);//"Commands"對應行為黑板中的變數名稱
     }
 }

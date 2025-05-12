@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] new Camera camera; // 引用 Unity 的 Camera 類別(給Racast使用), 把Main Camera拖進來
     [SerializeField] CamaraConfig camaraConfig; // 引用相機配置類別
     [SerializeField] private LayerMask selectableLayers; // 可被玩家選擇的圖層有哪些
+    [SerializeField] private LayerMask interactableLayers; // 可和玩家互動的圖層有哪些 - 如礦點
     [SerializeField] private LayerMask moveableLayers; // 可供移動的圖層
     [SerializeField] private RectTransform selectionRect; // 框選的遮罩
 
@@ -155,7 +156,7 @@ public class PlayerInput : MonoBehaviour
         }
         //處理左鍵單選,裡面會用雷射射線去選擇被點到的單位，
         //將被選到的也會被添加進selectUnits中
-        HandleSelectSingleUnit();
+        HandleSelectSingle();
         //處理框選的單位
         SelectAllDragSelectedUnits();
         selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
@@ -189,7 +190,7 @@ public class PlayerInput : MonoBehaviour
         selectionRect.sizeDelta = new Vector2(Mathf.Abs(end.x - start.x), Mathf.Abs(end.y - start.y)); // 設置框選遮罩的大小
         return new Bounds(selectionRect.anchoredPosition, selectionRect.sizeDelta); // 返回框選遮罩的邊界
     }
-    private void HandleSelectSingleUnit()
+    private void HandleSelectSingle()
     {
         // 射線從相機發射到滑鼠位置
         Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -204,7 +205,7 @@ public class PlayerInput : MonoBehaviour
         }
         else if (activeCommand != null // 射線擊中地板時 && 不是點在UI上  && 有當前指令時 
                 && !wasMouseDownOnUI
-                && Physics.Raycast(cameraRay, out hit, float.MaxValue, moveableLayers))
+                && Physics.Raycast(cameraRay, out hit, float.MaxValue, moveableLayers | interactableLayers))
         {
             ActivateCommand(hit);
         }
@@ -219,18 +220,17 @@ public class PlayerInput : MonoBehaviour
         for (int i = 0; i < units.Count; i++)
         {
             CommandContext context = new(units[i], hit, i);
-            activeCommand.Handle(context);
+            if(activeCommand.CanHandle(context)) activeCommand.Handle(context);
         }
         activeCommand = null; //執行完之後清除掉, 代表已經執行完成
     }
-
     private void HandleRightClick()
     {
         if (selectUnits.Count == 0) return;
         if (Mouse.current.rightButton.wasReleasedThisFrame)
         {
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, moveableLayers))
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, moveableLayers | interactableLayers))
             {
                 //由於需要的agent radius在Unit類別裡面
                 //這裡暫時轉換一下，之後要重構
