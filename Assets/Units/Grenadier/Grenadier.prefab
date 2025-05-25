@@ -457,6 +457,7 @@ GameObject:
   - component: {fileID: 691975021363860544}
   - component: {fileID: -5861425101911271178}
   - component: {fileID: 2376161887060880036}
+  - component: {fileID: 5703251543216684943}
   m_Layer: 6
   m_Name: Grenadier
   m_TagString: Untagged
@@ -541,7 +542,7 @@ MonoBehaviour:
   <AvailableCommands>k__BackingField: []
   <CurrentHealth>k__BackingField: 150
   <MaxHealth>k__BackingField: 150
-  unitSO: {fileID: 11400000, guid: ed1b9b35782c7414fbb7297fcbf62556, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: ed1b9b35782c7414fbb7297fcbf62556, type: 2}
   onSelectDecal: {fileID: 0}
 --- !u!136 &2376161887060880036
 CapsuleCollider:
@@ -566,6 +567,25 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5703251543216684943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813055781741166138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1929278855779803906
 GameObject:
   m_ObjectHideFlags: 0

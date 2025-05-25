@@ -6,7 +6,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
     [field: SerializeField] public Command[] AvailableCommands { get; private set; } //裝載各種指令
     [field: SerializeField] public float CurrentHealth { get; private set; }
     [field: SerializeField] public float MaxHealth { get; private set; }
-    [SerializeField] private UnitSO unitSO; // 這個單位的數據
+    [field: SerializeField] public UnitSO unitSO {get; private set;} // 這個單位的數據
     [SerializeField] private DecalProjector onSelectDecal; // 被選中時的標籤貼紙
     protected virtual void Awake()
     {

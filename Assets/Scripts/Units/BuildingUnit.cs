@@ -6,7 +6,7 @@ public class BuildingUnit : CommandableUnit
 {
     //getter只讀屬性，供外部獲取使用
     public int QueueSize => buildingQueue.Count;
-    public UnitSO[] Queue => buildingQueue.ToArray();
+    public UnitSO[] BuildingQueue => buildingQueue.ToArray(); 
 
     //public屬性，可供外部獲取；並且只有本類能修改
     public float CurrentBuildStartTime { get; private set; } //當前正在生產的開始時間

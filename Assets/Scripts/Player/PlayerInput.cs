@@ -67,7 +67,7 @@ public class PlayerInput : MonoBehaviour
     private void HandleCommandSelected(CommandSelectedEvent evt) 
     {
         activeCommand = evt.SelectdCommand;
-        if(!activeCommand.RequiresClickToActive) //處理按下按鈕立即執行的指令
+        if(!activeCommand.RequiresClickToActive) //處理按下按鈕立即執行的指令, 如生產單位的指令
         {
             ActivateCommand(new RaycastHit());
         }

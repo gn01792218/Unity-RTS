@@ -30,4 +30,9 @@ public class GatherableResource : MonoBehaviour, IGatherable
         if (Amount <= 0) Destroy(gameObject);
         return amountGathered;
     }
+
+    public void AbortGather()
+    {
+        IsBusy = false; //中止採集，設置為false
+    }
 }

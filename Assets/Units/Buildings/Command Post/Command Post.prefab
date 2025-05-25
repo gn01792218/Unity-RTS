@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8954186936418030536}
   - component: {fileID: 1674122618939033289}
   - component: {fileID: 4032867340466887990}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Command Post
   m_TagString: Home
   m_Icon: {fileID: 0}
@@ -69,9 +69,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f451b65d979b2f40a14cef89e20373a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <CurrentHealth>k__BackingField: 0
-  <MaxHealth>k__BackingField: 0
-  unitSO: {fileID: 11400000, guid: fa0e134bd66a960409e41b2a73045429, type: 2}
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: d469483d54987404091553dc494acf15, type: 2}
+  <CurrentHealth>k__BackingField: 100
+  <MaxHealth>k__BackingField: 100
+  <unitSO>k__BackingField: {fileID: 11400000, guid: fa0e134bd66a960409e41b2a73045429, type: 2}
   onSelectDecal: {fileID: 5871516930831765837}
 --- !u!208 &4032867340466887990
 NavMeshObstacle:
@@ -83,7 +85,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.95, y: 0.5, z: 1.35}
+  m_Extents: {x: 1, y: 0.5, z: 1}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -140,10 +142,10 @@ MonoBehaviour:
   m_EndAngleFade: 180
   m_UVScale: {x: 1, y: 1}
   m_UVBias: {x: 0, y: 0}
-  m_DecalLayerMask: 1
+  m_DecalLayerMask: 2
   m_ScaleMode: 0
   m_Offset: {x: 0, y: 0, z: 0}
-  m_Size: {x: 2.84, y: 3.92, z: 1}
+  m_Size: {x: 3.28, y: 4.16, z: 1}
   m_FadeFactor: 1
 --- !u!1001 &6224525886635980577
 PrefabInstance:

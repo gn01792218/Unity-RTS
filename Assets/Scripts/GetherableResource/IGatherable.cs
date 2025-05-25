@@ -6,4 +6,5 @@ public interface IGatherable
 
     public bool BeginGather(); //開始獲取
     public int EndGather(); //結束獲取,會回傳獲取了多少資源的數量
+    public void AbortGather(); //中止獲取,如單位被殺死或是資源被摧毀、玩家取消獲取等情況
 }

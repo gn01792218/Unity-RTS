@@ -42,7 +42,7 @@ public class BuildBuildingUI : MonoBehaviour, IUIElement<BuildingUnit>
         {
             //疑問: 2. 會合要用一個local的 int index = i ?
             int index = i; //catch起當前的index才不會被洗到最後一個index
-            cancleUnitBuildButtons[i].EnableFor(currentBuilding.Queue[i], () => currentBuilding.CancelBuildingUnit(index));
+            cancleUnitBuildButtons[i].EnableFor(currentBuilding.BuildingQueue[i], () => currentBuilding.CancelBuildingUnit(index));
         }
         for (; i < cancleUnitBuildButtons.Length; i++)
         {

@@ -90,7 +90,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b64940508ab1d294688b3d457eb7a377, type: 2}
   <CurrentHealth>k__BackingField: 150
   <MaxHealth>k__BackingField: 150
-  unitSO: {fileID: 11400000, guid: fbad37708beb9cf41ba69e50ffea8f73, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: fbad37708beb9cf41ba69e50ffea8f73, type: 2}
   onSelectDecal: {fileID: 4392261102151165647}
 --- !u!1 &8893326212888010055
 GameObject:

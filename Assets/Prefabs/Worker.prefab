@@ -1947,13 +1947,14 @@ GameObject:
   - component: {fileID: 5340893138575514852}
   - component: {fileID: 2547257448993174714}
   - component: {fileID: 6563037948711262714}
+  - component: {fileID: 5176809999123394727}
   m_Layer: 6
   m_Name: Worker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7844939680280228518
 Transform:
   m_ObjectHideFlags: 0
@@ -2031,7 +2032,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
-  unitSO: {fileID: 11400000, guid: 6bd16236e4b26574ba5a85094f13101e, type: 2}
+  <unitSO>k__BackingField: {fileID: 0}
   onSelectDecal: {fileID: 6387976702508423737}
 --- !u!136 &6563037948711262714
 CapsuleCollider:
@@ -2056,6 +2057,25 @@ CapsuleCollider:
   m_Height: 2.4975219
   m_Direction: 1
   m_Center: {x: 0, y: 0.74876094, z: 0}
+--- !u!114 &5176809999123394727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8047058466691667621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &8165434858162240158
 GameObject:
   m_ObjectHideFlags: 0
