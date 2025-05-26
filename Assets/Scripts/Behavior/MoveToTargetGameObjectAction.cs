@@ -13,6 +13,7 @@ public partial class MoveToTargetGameObjectAction : Action
     [SerializeReference] public BlackboardVariable<GameObject> TargetGameObject;
 
     private NavMeshAgent agent;
+    private Animator animator;
 
     protected override Status OnStart()
     {
@@ -21,6 +22,7 @@ public partial class MoveToTargetGameObjectAction : Action
             Debug.LogError("Agent 或 TargetGameObject 未正確設置！");
             return Status.Failure;
         }
+        Agent.Value.TryGetComponent(out animator);
 
         Vector3 targetPosition = GetTargetPosition();
         if(Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
@@ -37,6 +39,7 @@ public partial class MoveToTargetGameObjectAction : Action
 
     protected override Status OnUpdate()
     {
+        if(animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
         //切記要加上agent.pathPending，因為SetDestination計算路徑需要時間，所以一開始的remainingDistance會是0
         //如果不加上這個判斷，會導致agent.remainingDistance是就直接被Status.Success返回了，導致無法移動到該目標!
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
@@ -46,6 +49,12 @@ public partial class MoveToTargetGameObjectAction : Action
         }
         Debug.Log($"Agent 移動中: {TargetGameObject.Value.name}");
         return Status.Running;
+    }
+
+    protected override void OnEnd()
+    {
+        //可以在這裡面直接執行，另一個Action，例如StopMoveAction嗎?
+        // if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
     }
 
     //優化目標點選擇

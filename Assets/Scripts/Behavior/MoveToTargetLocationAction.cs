@@ -13,14 +13,18 @@ public partial class MoveToTargetLocationAction : Action
     [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
 
     private NavMeshAgent agent;
+    private Animator animator;
 
     protected override Status OnStart()
     {
         //沒有agent的話就回傳失敗
-        if(!Agent.Value.TryGetComponent(out agent)) return Status.Failure;
+        if (!Agent.Value.TryGetComponent(out agent)) return Status.Failure;
+
+        //設置動畫器
+        Agent.Value.TryGetComponent(out animator);
 
         //當到達指定距離時，回傳成功
-        if(Vector3.Distance(agent.transform.position, TargetLocation.Value) <= agent.stoppingDistance)
+        if (Vector3.Distance(agent.transform.position, TargetLocation.Value) <= agent.stoppingDistance)
         {
             return Status.Success; //回傳Success，就不會再進入OnUpdate了
                                    //因為會跑到下一個Node!
@@ -32,13 +36,14 @@ public partial class MoveToTargetLocationAction : Action
 
     protected override Status OnUpdate()
     {
-        if(agent.remainingDistance <= agent.stoppingDistance) return Status.Success;
+        if(animator!=null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
+        if (agent.remainingDistance <= agent.stoppingDistance) return Status.Success;
         return Status.Running;
     }
-
     //每次當我們成功或失敗，後要離開這個節點時
     protected override void OnEnd()
     {
+        if(animator!=null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
     }
 }
 

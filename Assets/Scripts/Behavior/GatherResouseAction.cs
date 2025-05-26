@@ -12,6 +12,7 @@ public partial class GatherResouseAction : Action
     [SerializeReference] public BlackboardVariable<int> Amount;
     [SerializeReference] public BlackboardVariable<GatherableResource> GatherableResources;
 
+    private Animator animator; //動畫控制器
     private float enterTime; //碰到資源的時間點
 
     protected override Status OnStart()
@@ -21,7 +22,10 @@ public partial class GatherResouseAction : Action
             return Status.Failure;
         }   
         enterTime = Time.time; //設置開始採集的時間
-
+        if(Unit.Value.TryGetComponent(out animator))
+        {
+            animator.SetBool(AnimationConstants.IS_GATHERING_ID, true);
+        }
         GatherableResources.Value.BeginGather(); //開始採集
         return Status.Running;
     }
@@ -41,7 +45,11 @@ public partial class GatherResouseAction : Action
 
     protected override void OnEnd()
     {
-        if(GatherableResources.Value == null) return;
+        if (animator != null)
+        {
+            animator.SetBool(AnimationConstants.IS_GATHERING_ID, false); //停止採集動畫
+        }
+        if (GatherableResources.Value == null) return;
         if (CurrentStatus == Status.Success)
         {
             Amount.Value = GatherableResources.Value.EndGather(); //結束採集，並獲取採集的數量

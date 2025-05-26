@@ -19,6 +19,8 @@ public partial class SetAgentAvoidanceAction : Action
             Debug.LogError($"Agent {Agent.Value.name} does not have a NavMeshAgent component.");
             return Status.Failure;
         }   
+
+        if (agent.TryGetComponent(out Animator animator)) animator.SetFloat(AnimationConstants.SPEED_ID, 0); //停止動畫
         agent.obstacleAvoidanceType = (ObstacleAvoidanceType)AvoidanceQuality.Value;
         return Status.Success;
     }

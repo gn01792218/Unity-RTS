@@ -16,6 +16,7 @@ public partial class MoveToGatherableResourceAction : Action
     [SerializeReference] public BlackboardVariable<float> SearchRadius = new(7f);
 
     private NavMeshAgent agent;
+    private Animator animator;
     private LayerMask gatherableResourceLayerMask;
     private GatherableResurceSO resourceSO; 
 
@@ -27,11 +28,39 @@ public partial class MoveToGatherableResourceAction : Action
         {
             return Status.Failure;
         }
+        Agent.Value.TryGetComponent(out agent);
         agent.SetDestination(GetTargetPosition());
         return Status.Running;
     }
 
-    private bool HasValidInputs()
+    protected override Status OnUpdate()
+    {
+        if(animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
+        if (agent.remainingDistance >= agent.stoppingDistance)
+        {
+            return Status.Running;
+        }
+        if (Resource.Value != null && !Resource.Value.IsBusy && Resource.Value.Amount > 0)
+        {
+            //如果資源不忙碌且數量大於0，則回傳成功
+            return Status.Success;
+        }
+        Collider[] colliders = FindNearbyNotBusyColliders();
+        if (colliders.Length > 0)
+        {
+            Resource.Value = GetClosestResourceCollider(colliders);
+            agent.SetDestination(GetTargetPosition());
+            return Status.Running;
+        }
+        return Status.Failure;
+    }
+
+    protected override void OnEnd()
+    {
+        if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
+    }
+
+     private bool HasValidInputs()
     {
         if (!Agent.Value.TryGetComponent(out agent) || (Resource.Value == null && resourceSO == null))
         {
@@ -58,27 +87,6 @@ public partial class MoveToGatherableResourceAction : Action
         }
 
         return true;
-    }
-
-    protected override Status OnUpdate()
-    {
-        if (agent.remainingDistance >= agent.stoppingDistance)
-        {
-            return Status.Running;
-        }
-        if (Resource.Value != null && !Resource.Value.IsBusy && Resource.Value.Amount > 0)
-        {
-            //如果資源不忙碌且數量大於0，則回傳成功
-            return Status.Success;
-        }
-        Collider[] colliders = FindNearbyNotBusyColliders();
-        if (colliders.Length > 0)
-        {
-            Resource.Value = GetClosestResourceCollider(colliders);
-            agent.SetDestination(GetTargetPosition());
-            return Status.Running;
-        }
-        return Status.Failure;
     }
 
     private GatherableResource GetClosestResourceCollider(Collider[] colliders)
