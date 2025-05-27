@@ -11,6 +11,7 @@ public partial class GatherResouseAction : Action
     [SerializeReference] public BlackboardVariable<GameObject> Unit;
     [SerializeReference] public BlackboardVariable<int> Amount;
     [SerializeReference] public BlackboardVariable<GatherableResource> GatherableResources;
+    [SerializeReference] public BlackboardVariable<GatherableResurceSO> GatherableResourceSO; //由於GatherableResource會在沒有資源時，自動摧毀，所以得將其SO儲存，才不會Null
 
     private Animator animator; //動畫控制器
     private float enterTime; //碰到資源的時間點
@@ -27,6 +28,7 @@ public partial class GatherResouseAction : Action
             animator.SetBool(AnimationConstants.IS_GATHERING_ID, true);
         }
         GatherableResources.Value.BeginGather(); //開始採集
+        GatherableResourceSO.Value = GatherableResources.Value.resourceSO; //儲存資源的ScriptableObject
         return Status.Running;
     }
 
