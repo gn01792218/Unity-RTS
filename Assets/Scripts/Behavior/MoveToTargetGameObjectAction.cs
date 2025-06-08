@@ -17,6 +17,7 @@ public partial class MoveToTargetGameObjectAction : Action
 
     protected override Status OnStart()
     {
+        Debug.Log("開始前往某處");
         if (!Agent.Value.TryGetComponent(out agent) || TargetGameObject.Value == null)
         {
             Debug.LogError("Agent 或 TargetGameObject 未正確設置！");
@@ -34,6 +35,7 @@ public partial class MoveToTargetGameObjectAction : Action
         //因為agent還沒有開始移動，這是Unity的bug   
         //所以Update中要加上agent.pathPending來判斷是否還在計算路徑
         agent.SetDestination(targetPosition);
+        Debug.Log($"前往目標{TargetGameObject.Name}");
         return Status.Running;
     }
 
@@ -54,6 +56,7 @@ public partial class MoveToTargetGameObjectAction : Action
     protected override void OnEnd()
     {
         //可以在這裡面直接執行，另一個Action，例如StopMoveAction嗎?
+        Debug.Log("結束前往某地");
         // if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
     }
 

@@ -8,25 +8,39 @@ using System.Collections.Generic;
 using System.Linq;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Move to GatherableResource", story: "[Agent] moves to [Resource] or nearby not busy resource", category: "Action/Navigation", id: "99022e6ca04c1079ec95a55a77d1c2d4")]
+[NodeDescription(name: "Move to GatherableResource", story: "[Agent] moves to [Resource] or nearby not busy resource, and set [HasNearByResource]", category: "Action/Navigation", id: "99022e6ca04c1079ec95a55a77d1c2d4")]
 public partial class MoveToGatherableResourceAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Agent;
     [SerializeReference] public BlackboardVariable<GatherableResource> Resource;
     [SerializeReference] public BlackboardVariable<float> SearchRadius = new(7f);
+    [SerializeReference] public BlackboardVariable<bool> HasNearByResource;
 
     private NavMeshAgent agent;
     private Animator animator;
     private LayerMask gatherableResourceLayerMask;
-    private GatherableResurceSO resourceSO; 
+    private GatherableResurceSO resourceSO;
 
     protected override Status OnStart()
     {
         gatherableResourceLayerMask = LayerMask.GetMask("GatherableResource");
-        
+
         if (!HasValidInputs())
         {
             return Status.Failure;
+        }
+        //若有附近資源，去採；若無移動到CommandPost
+        Collider[] colliders = FindNearbyNotBusyColliders();
+        if (colliders.Length > 0)
+        {
+            Resource.Value = GetClosestResourceCollider(colliders);
+            resourceSO = Resource.Value.resourceSO;
+            HasNearByResource.Value = true;
+        }
+        else
+        {
+            Debug.Log("沒有找到附近的資源，無法移動到資源位置。");
+            HasNearByResource.Value = false;
         }
         Agent.Value.TryGetComponent(out agent);
         agent.SetDestination(GetTargetPosition());
@@ -35,7 +49,7 @@ public partial class MoveToGatherableResourceAction : Action
 
     protected override Status OnUpdate()
     {
-        if(animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
+        if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
         if (agent.remainingDistance >= agent.stoppingDistance)
         {
             return Status.Running;
@@ -52,7 +66,10 @@ public partial class MoveToGatherableResourceAction : Action
             agent.SetDestination(GetTargetPosition());
             return Status.Running;
         }
-        return Status.Failure;
+        else
+        {
+            return Status.Success;
+        }
     }
 
     protected override void OnEnd()
@@ -60,9 +77,9 @@ public partial class MoveToGatherableResourceAction : Action
         if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
     }
 
-     private bool HasValidInputs()
+    private bool HasValidInputs()
     {
-        if (!Agent.Value.TryGetComponent(out agent) || (Resource.Value == null && resourceSO == null))
+        if (!Agent.Value.TryGetComponent(out agent))
         {
             return false;
         }
@@ -71,21 +88,6 @@ public partial class MoveToGatherableResourceAction : Action
         {
             resourceSO = Resource.Value.resourceSO;
         }
-        else //如果沒有指定資源，則尋找附近的資源
-        {
-            Collider[] colliders = FindNearbyNotBusyColliders();
-            if (colliders.Length > 0)
-            {
-                Resource.Value = GetClosestResourceCollider(colliders);
-                resourceSO = Resource.Value.resourceSO;
-            }
-            else
-            {
-                Debug.LogWarning("沒有找到附近的資源，無法移動到資源位置。");
-                return false;
-            }
-        }
-
         return true;
     }
 
@@ -107,16 +109,18 @@ public partial class MoveToGatherableResourceAction : Action
 
     private Collider[] FindNearbyNotBusyColliders()
     {
-        //找出附近其他沒有在忙碌的資源
-        Collider[] colliders = Physics.OverlapSphere(
-            agent.transform.position,
-            SearchRadius,
-            gatherableResourceLayerMask
-            ).Where(collider => collider.TryGetComponent(out GatherableResource gatherableResource)
-                    && !gatherableResource.IsBusy
-                    && gatherableResource.resourceSO.Equals(resourceSO) //資源有不同種的，故要確保是和自己同種的SO
-             ).ToArray();
-        return colliders;
+        // 找出附近其他沒有在忙碌的資源，若 resourceSO 不為 null 則比對資源種類
+        return Physics.OverlapSphere(
+                agent.transform.position,
+                SearchRadius,
+                gatherableResourceLayerMask
+            )
+            .Where(collider =>
+                collider.TryGetComponent(out GatherableResource gatherableResource)
+                && !gatherableResource.IsBusy
+                && (resourceSO == null || gatherableResource.resourceSO.Equals(resourceSO))
+            )
+            .ToArray();
     }
 
     //優化目標點選擇

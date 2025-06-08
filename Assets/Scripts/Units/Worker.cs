@@ -34,7 +34,6 @@ public class Worker : Unit
   {
     behaviorAgent.SetVariableValue("TargetCommandPostBuilding", commandPost); //設定目標建築物
     behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.ReturnResources); //發起返回資源命令
-    
   }
   private void OnGatherResourceEvent(GameObject Self, int Amount, GatherableResurceSO Resources)
   {

@@ -14,14 +14,6 @@ public class ReturnResourceCommand : Command
     public override void Handle(CommandContext context)
     {
         Worker worker = context.Unit as Worker;
-
-        if (worker.HasResources)
-        {
-            worker.ReturnResources(context.Hit.collider.gameObject);
-        }
-        else
-        {
-            //應該要去找最近的資源進行採集!
-        }
+        worker.ReturnResources(context.Hit.collider.gameObject);
     }
 }

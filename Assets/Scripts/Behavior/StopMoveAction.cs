@@ -13,7 +13,7 @@ public partial class StopMoveAction : Action
 
     protected override Status OnStart()
     {
-        if(Agent.Value.TryGetComponent(out NavMeshAgent agent))
+        if (Agent.Value.TryGetComponent(out NavMeshAgent agent))
         {
             agent.ResetPath(); //停止並清空移動路徑
             return Status.Success;

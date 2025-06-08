@@ -15837,13 +15837,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1683842420137559233, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.03
+      objectReference: {fileID: 0}
     - target: {fileID: 2121919384460996091, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_Name
       value: Worker (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.199974
+      value: 2.32
       objectReference: {fileID: 0}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -15851,7 +15855,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -56.919605
+      value: -44.73
       objectReference: {fileID: 0}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalRotation.w
