@@ -1,9 +1,20 @@
-using System;
 using Unity.Behavior;
 using UnityEngine;
 
 public class Worker : Unit
 {
+  //computed properties
+  public bool HasResources
+  {
+    get
+    {
+      if (behaviorAgent.GetVariable("ResourceAmount", out BlackboardVariable<int> resourceAmount))
+      {
+        return resourceAmount.Value > 0;
+      }
+      return false;
+    }
+  }
   protected override void Start()
   {
     base.Start();
@@ -18,6 +29,12 @@ public class Worker : Unit
     behaviorAgent.SetVariableValue("TargetResource", resource);
     behaviorAgent.SetVariableValue("TargetGameObject", resource.gameObject);
     behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Gather);
+  }
+  public void ReturnResources(GameObject commandPost)
+  {
+    behaviorAgent.SetVariableValue("TargetCommandPostBuilding", commandPost); //設定目標建築物
+    behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.ReturnResources); //發起返回資源命令
+    
   }
   private void OnGatherResourceEvent(GameObject Self, int Amount, GatherableResurceSO Resources)
   {

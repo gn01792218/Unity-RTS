@@ -25,7 +25,7 @@ public class CommandUI : MonoBehaviour, IUIElement<HashSet<CommandableUnit>>
             availableCommands.UnionWith(unit.AvailableCommands); //使用UnionWith確保不會重複+到一樣的指令
         }
         for(int i =0; i< commandButtons.Length; i++){
-            Command commandForSlot = availableCommands.Where(command => command.SlotIndex == i).FirstOrDefault();
+            Command commandForSlot = availableCommands.Where(command => command.SlotIndex == i && command.ShowInCommandUI).FirstOrDefault();
             if(commandForSlot != null){
                 commandButtons[i].EnableFor(commandForSlot, HandleClick(commandForSlot));
             }

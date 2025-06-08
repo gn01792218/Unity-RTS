@@ -5,6 +5,7 @@ using Unity.Behavior;
 public enum UnitCommandsEnum
 {
     Move,
-	Stop,
-    Gather
+    Stop,
+    Gather,
+    ReturnResources
 }
