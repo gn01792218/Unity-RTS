@@ -6,8 +6,10 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
     [field: SerializeField] public Command[] AvailableCommands { get; private set; } //裝載各種指令
     [field: SerializeField] public float CurrentHealth { get; private set; }
     [field: SerializeField] public float MaxHealth { get; private set; }
-    [field: SerializeField] public UnitSO unitSO {get; private set;} // 這個單位的數據
+    [field: SerializeField] public UnitSO unitSO { get; private set; } // 這個單位的數據
     [SerializeField] private DecalProjector onSelectDecal; // 被選中時的標籤貼紙
+
+    private Command[] initialAvailableCommands; //表示第一層(頁)的指令列表
     protected virtual void Awake()
     {
         onSelectDecal.gameObject.SetActive(false); // 初始化時隱藏標籤貼紙
@@ -17,6 +19,8 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
         // 初始化當前血量
         CurrentHealth = unitSO.Health;
         MaxHealth = unitSO.Health;
+
+        initialAvailableCommands = AvailableCommands;
     }
     public void OnSelect()
     {
@@ -31,6 +35,24 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
         onSelectDecal.gameObject.SetActive(false); // Disable the decal projector when deselected
         //發送取消選取的事件
         // ps.監聽事件者要負責將該單位從選取列表中移除
+        OverridesAvailableCommands(null); //傳入null會恢復到該單位的初始化指令列表
         Bus<UnselectedEvent>.Publish(new UnselectedEvent(this));
+    }
+
+    public void OverridesAvailableCommands(Command[] commands)
+    {
+        if (commands == null || commands.Length == 0)
+        {
+            AvailableCommands = initialAvailableCommands;
+        }
+        else
+        {
+            AvailableCommands = commands;
+        }
+
+        //通知UI更新
+        //因為單位被選中時會刷新UI
+        //之後可以考慮新增一個更明確的事件，目前先偷懶
+        Bus<SelectedEvent>.Publish(new SelectedEvent(this));
     }
 }

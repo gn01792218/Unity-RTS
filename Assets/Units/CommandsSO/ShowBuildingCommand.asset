@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c2c11b16c684e343b304bc2647c275c, type: 3}
+  m_Name: ShowBuildingCommand
+  m_EditorClassIdentifier: 
+  <Icon>k__BackingField: {fileID: 21300000, guid: a5df28aa58ab6264bb16fe1e21c4e327, type: 3}
+  <SlotIndex>k__BackingField: 5
+  <RequiresClickToActive>k__BackingField: 0
+  <ShowInCommandUI>k__BackingField: 1
+  <Commands>k__BackingField:
+  - {fileID: 11400000, guid: d96641d11026c794d82ce298d7dda3f3, type: 2}

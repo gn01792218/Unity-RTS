@@ -62,7 +62,14 @@ public class PlayerInput : MonoBehaviour
         Bus<CommandSelectedEvent>.Unsubscribe(HandleCommandSelected);
     }
     private void HandleUnitSpawn(SpawnUnitEvent evt) => aliveUnits.Add(evt.SpawnUnit);//當單位出生時，將其添加到存活單位的集合中
-    private void HandleSelected(SelectedEvent evt) => selectUnits.Add(evt.SelectdObject); // 將被選到的物件添加到selectUnits中
+    private void HandleSelected(SelectedEvent evt)
+    {
+        //沒包含該單位時才+進去，避免重複+到
+        if (!selectUnits.Contains(evt.SelectdObject))
+        {
+            selectUnits.Add(evt.SelectdObject); // 將被選到的物件添加到selectUnits中
+        }
+    }
     private void HandleUnselected(UnselectedEvent evt) => selectUnits.Remove(evt.SelectdObject); // 移除取消選中的物件
     private void HandleCommandSelected(CommandSelectedEvent evt) 
     {
