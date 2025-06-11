@@ -12,6 +12,5 @@ public class BuildUnitCommand : Command
     {
         BuildingUnit buildingUnit = context.Unit as BuildingUnit; //將單位轉換為Unit類別，為了獲取AgentRadius
         buildingUnit.BuildUnit(unitSO);
-        
     }
 }

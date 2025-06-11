@@ -37,8 +37,10 @@ public class BuildBuildingUI : MonoBehaviour, IUIElement<BuildingUnit>
         //疑問: 1.for的int i = 0 幹嘛寫在外面?
         //假設queue有3個待生產的單位，然後我們共有5個按鈕
         //因為是共用的i，所以跑完第一個for之後，第二個for就是剩下沒用到的案紐，可以取消
+        if (currentBuilding == null || currentBuilding.BuildingQueue == null || cancleUnitBuildButtons == null) return;
+        
         int i = 0;
-        for (; i < currentBuilding.QueueSize; i++)
+        for (; i < currentBuilding.QueueSize && i < cancleUnitBuildButtons.Length; i++)
         {
             //疑問: 2. 會合要用一個local的 int index = i ?
             int index = i; //catch起當前的index才不會被洗到最後一個index
@@ -53,8 +55,9 @@ public class BuildBuildingUI : MonoBehaviour, IUIElement<BuildingUnit>
     private void HandleQueueUpdated(UnitSO[] unitsInQueue)
     {
         if(unitsInQueue.Length == 0 ) progressBar.SetProgress(0);
-        if(unitsInQueue.Length == 1 && currentBuildCoroutine == null) 
+        if(unitsInQueue.Length == 1 && currentBuildCoroutine == null && gameObject.activeInHierarchy) 
         {
+            if (currentBuildCoroutine != null) StopCoroutine(currentBuildCoroutine);
             currentBuildCoroutine = StartCoroutine(UpdateBuildProgress());
         }
         SetupCancelButtons(); //更新按鈕

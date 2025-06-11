@@ -1,0 +1,6 @@
+using UnityEngine;
+
+public interface IBuildingBuilder
+{
+    public GameObject BuildBuilding(BuildingUnitSO building, Vector3 targetLocation);
+}

@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BuildingUnit : CommandableUnit
 {
+    [field: SerializeField] public MeshRenderer MainRender { get; private set; }
+    [SerializeField] private NavMeshObstacle navMeshObstacle;
     //getter只讀屬性，供外部獲取使用
     public int QueueSize => buildingQueue.Count;
     public UnitSO[] BuildingQueue => buildingQueue.ToArray(); 
@@ -20,6 +23,11 @@ public class BuildingUnit : CommandableUnit
     //私有屬性
     private const int MAX_QUEUE_SIZE = 5; //佇列的最大限制
     private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE); //生產佇列
+    protected override void Start()
+    {
+        base.Start();
+        navMeshObstacle.enabled = true;
+    }
     public void BuildUnit(UnitSO unit)
     {
         if (buildingQueue.Count == MAX_QUEUE_SIZE)
@@ -63,6 +71,13 @@ public class BuildingUnit : CommandableUnit
         else{
             EmitOnQueueUpdated();
         }
+    }
+
+    public void ShowGhostVisuals() //顯示ghostMaterial
+    {
+        MainRender = GetComponentInChildren<MeshRenderer>();
+        var so = unitSO as BuildingUnitSO;
+        MainRender.material = so.PlacementMaterial;
     }
 
     //製做一個Coroutine方法

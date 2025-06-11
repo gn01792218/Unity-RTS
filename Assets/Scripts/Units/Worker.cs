@@ -1,7 +1,7 @@
 using Unity.Behavior;
 using UnityEngine;
 
-public class Worker : Unit
+public class Worker : Unit, IBuildingBuilder
 {
   //computed properties
   public bool HasResources
@@ -35,6 +35,27 @@ public class Worker : Unit
     behaviorAgent.SetVariableValue("TargetCommandPostBuilding", commandPost); //設定目標建築物
     behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.ReturnResources); //發起返回資源命令
   }
+  public GameObject BuildBuilding(BuildingUnitSO buildingSO, Vector3 targetLocation)
+  {
+    var ghostInstance = Instantiate(buildingSO.Prefab, targetLocation, Quaternion.identity);
+    if (ghostInstance.TryGetComponent(out BuildingUnit baseBuilding))
+    {
+      baseBuilding.ShowGhostVisuals();
+    }
+    else
+    {
+      Debug.LogError($"Missing BaseBuilding on Prefab for BuildingSo ${buildingSO.name}! Cannot build");
+      return null;
+    }
+    //set up blackboard to build
+    behaviorAgent.SetVariableValue("BuildBuildingSO", buildingSO);
+    behaviorAgent.SetVariableValue("TargetLocation", targetLocation);
+    behaviorAgent.SetVariableValue("BuildingGhost", ghostInstance);
+    behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.BuildBuilding);
+
+    return ghostInstance;
+  }
+
   private void OnGatherResourceEvent(GameObject Self, int Amount, GatherableResurceSO Resources)
   {
     // 發送GatherResourceEvent

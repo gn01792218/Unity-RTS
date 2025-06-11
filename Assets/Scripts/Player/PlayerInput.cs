@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour
     private Vector2 mouseStartPosition; // 滑鼠開始位置
     private InputAction moveAction;
     private Command activeCommand;
+    private GameObject ghostInstance;
     private bool wasMouseDownOnUI; //滑鼠是否點在UI上面?
     private CinemachineFollow cinemachineFollow; // 引用 CinemachineFollow 組件
     private Vector3 startingTrackedObjectOffset; // 初始的 Tracked Object Offset
@@ -71,12 +72,16 @@ public class PlayerInput : MonoBehaviour
         }
     }
     private void HandleUnselected(UnselectedEvent evt) => selectUnits.Remove(evt.SelectdObject); // 移除取消選中的物件
-    private void HandleCommandSelected(CommandSelectedEvent evt) 
+    private void HandleCommandSelected(CommandSelectedEvent evt)
     {
         activeCommand = evt.SelectdCommand;
-        if(!activeCommand.RequiresClickToActive) //處理按下按鈕立即執行的指令, 如生產單位的指令
+        if (!activeCommand.RequiresClickToActive) //處理按下按鈕立即執行的指令, 如生產單位的指令
         {
             ActivateCommand(new RaycastHit());
+        }
+        else if (activeCommand is BuildBuildingCommand buildCommand) //處理建築類別的
+        {
+            ghostInstance = Instantiate(buildCommand.GhostPrefab);
         }
     }
     private void InitCinemachineFollow()
@@ -104,6 +109,7 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
+        HandleGhost(); //建築指令按下去後的顯示
         HandleZooming();
         HandlePanning();
         HandleUnitSelection();
@@ -136,7 +142,7 @@ public class PlayerInput : MonoBehaviour
     }
     private void HandleLeftDrag()
     {
-        if(activeCommand !=null || wasMouseDownOnUI) return; //如果有指令 或是 滑鼠在UI介面上，就返回
+        if (activeCommand != null || wasMouseDownOnUI) return; //如果有指令 或是 滑鼠在UI介面上，就返回
         Bounds selectBounds = ResizeSelectRect();
         //僅針對活著的單位做處理
         foreach (Unit unit in aliveUnits)
@@ -219,6 +225,11 @@ public class PlayerInput : MonoBehaviour
     }
     private void ActivateCommand(RaycastHit hit)
     {
+        //記得清除建築指令留下的鬼魂instance，否則會一直跟著滑鼠哦
+        if (ghostInstance != null)
+        {
+            DropGhostInstance();
+        }
         List<CommandableUnit> units = selectUnits
                         .Where((unit) => unit is CommandableUnit) //Where 方法只會篩選符合條件的元素，但不會自動轉換元素的型態；
                         .Cast<CommandableUnit>() //使用 Cast 方法將篩選後的元素顯式轉換為指定的型態。
@@ -227,7 +238,7 @@ public class PlayerInput : MonoBehaviour
         for (int i = 0; i < units.Count; i++)
         {
             CommandContext context = new(units[i], hit, i);
-            if(activeCommand.CanHandle(context)) activeCommand.Handle(context);
+            if (activeCommand.CanHandle(context)) activeCommand.Handle(context);
         }
         activeCommand = null; //執行完之後清除掉, 代表已經執行完成
     }
@@ -308,7 +319,7 @@ public class PlayerInput : MonoBehaviour
 
         // 取得滑鼠移動輸入
         // 用+= 才不會覆蓋掉鍵盤輸入的值
-        Vector2 mouseMovement = GetMouseMovement();
+        Vector2 mouseMovement = GetMouseEdgePanVector();
         moveX += mouseMovement.x;
         moveY += mouseMovement.y;
 
@@ -316,7 +327,37 @@ public class PlayerInput : MonoBehaviour
         // 這裡的速度是相機跟隨目標的速度
         camaraFollowTarget.linearVelocity = new Vector3(moveX, 0, moveY) * camaraConfig.CamaraMoveSpeed; // 更新相機位置
     }
-    private Vector2 GetMouseMovement()
+    private void HandleGhost()
+    {
+        if (ghostInstance == null) return;
+        //按下Esc的時候也要釋放
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            DropGhostInstance();
+            activeCommand = null;
+            return;
+        }
+        //使用GetMouseMovement方法，更新ghostInstance的位置
+        ghostInstance.transform.position = GetMouseGroundPosition();
+    }
+    private void DropGhostInstance()
+    {
+        Destroy(ghostInstance);
+        ghostInstance = null;
+    }
+    private Vector3 GetMouseGroundPosition()
+    {
+        // 從螢幕滑鼠座標發射射線
+        Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        // 嘗試射到地面圖層
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, moveableLayers))
+        {
+            return hit.point; // 回傳地面交點
+        }
+        // 若沒射到地面，回傳預設值（可依需求調整）
+        return Vector3.zero;
+    }
+    private Vector2 GetMouseEdgePanVector()
     {
         if (!camaraConfig.EnableEdgePan) return Vector2.zero; // 如果未啟用邊緣平移，返回零向量
 

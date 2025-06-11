@@ -91,6 +91,8 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 100
   <unitSO>k__BackingField: {fileID: 11400000, guid: 4924f4488047a8d49965ed296530d138, type: 2}
   onSelectDecal: {fileID: 1428561462453220536}
+  <MainRender>k__BackingField: {fileID: 8477328904039810847}
+  navMeshObstacle: {fileID: 1143123078879668775}
 --- !u!1 &6969878546715826430
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,5 +229,10 @@ PrefabInstance:
 --- !u!4 &7344994296185896048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 65f3692cf55db4a43b8befcf3d45c8a2, type: 3}
+  m_PrefabInstance: {fileID: 7089809412475542427}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8477328904039810847 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 65f3692cf55db4a43b8befcf3d45c8a2, type: 3}
   m_PrefabInstance: {fileID: 7089809412475542427}
   m_PrefabAsset: {fileID: 0}

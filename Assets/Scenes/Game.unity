@@ -7609,6 +7609,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4478286395907081486, guid: ce58b4a7676b51d45869f6a426cf2db8, type: 3}
+      propertyPath: <MainRender>k__BackingField
+      value: 
+      objectReference: {fileID: 1489567304}
     - target: {fileID: 4556868348065212012, guid: ce58b4a7676b51d45869f6a426cf2db8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.671472
@@ -18400,6 +18404,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1478343613}
   m_CullTransparentMesh: 1
+--- !u!23 &1489567304 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8477328904039810847, guid: ce58b4a7676b51d45869f6a426cf2db8, type: 3}
+  m_PrefabInstance: {fileID: 710594901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1494208624
 PrefabInstance:
   m_ObjectHideFlags: 0
