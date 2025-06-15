@@ -8,18 +8,20 @@ public class RuntimeUI : MonoBehaviour
     private HashSet<CommandableUnit> selectedUnits = new(12);
     private void Awake()
     {
-        Bus<SelectedEvent>.OnEvent += HandleUnitSelected;
-        Bus<UnselectedEvent>.OnEvent += HandleUnitUnselected;
+        Bus<SelectedEvent>.Subscribe(HandleUnitSelected);
+        Bus<UnselectedEvent>.Subscribe(HandleUnitUnselected);
+        Bus<UnitDeathEvent>.Subscribe(HandleUnitDeath);
     }
     private void Start()
     {
         commandUI.Disable();
         buildBuildingUI.Disable();
     }
-    private void ODestroy()
+    private void OnDestroy()
     {
         Bus<SelectedEvent>.Unsubscribe(HandleUnitSelected);
         Bus<UnselectedEvent>.Unsubscribe(HandleUnitUnselected);
+        Bus<UnitDeathEvent>.Unsubscribe(HandleUnitDeath);
     }
     private void HandleUnitSelected(SelectedEvent evt)
     {
@@ -27,9 +29,9 @@ public class RuntimeUI : MonoBehaviour
         {
             selectedUnits.Add(unit);
             commandUI.EnableFor(selectedUnits);
-            
+
         }
-        if(evt.SelectdObject is BuildingUnit building && selectedUnits.Count == 1 ) //只有單選到building才會顯示唷
+        if (evt.SelectdObject is BuildingUnit building && selectedUnits.Count == 1) //只有單選到building才會顯示唷
         {
             buildBuildingUI.EnableFor(building);
         }
@@ -40,7 +42,19 @@ public class RuntimeUI : MonoBehaviour
         {
             selectedUnits.Remove(unit);
             commandUI.Disable();
-            if(unit is BuildingUnit)
+            if (unit is BuildingUnit)
+            {
+                buildBuildingUI.Disable();
+            }
+        }
+    }
+    private void HandleUnitDeath(UnitDeathEvent evt)
+    {
+        if (evt.Unit is CommandableUnit unit)
+        {
+            selectedUnits.Remove(unit);
+            commandUI.Disable();
+            if (unit is BuildingUnit)
             {
                 buildBuildingUI.Disable();
             }

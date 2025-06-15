@@ -50,10 +50,11 @@ public class PlayerInput : MonoBehaviour
 
         selectionRect.gameObject.SetActive(false); // 隱藏框選遮罩
         //訂閱EventBus
-        Bus<SelectedEvent>.OnEvent += HandleSelected; // 訂閱選擇事件
-        Bus<UnselectedEvent>.OnEvent += HandleUnselected; // 訂閱取消選擇事件
-        Bus<SpawnUnitEvent>.OnEvent += HandleUnitSpawn; // 訂閱單位出生事件
-        Bus<CommandSelectedEvent>.OnEvent += HandleCommandSelected; //訂閱指令事件
+        Bus<SelectedEvent>.Subscribe(HandleSelected); // 訂閱選擇事件
+        Bus<UnselectedEvent>.Subscribe(HandleUnselected); // 訂閱取消選擇事件
+        Bus<SpawnUnitEvent>.Subscribe(HandleUnitSpawn); // 訂閱單位出生事件
+        Bus<CommandSelectedEvent>.Subscribe(HandleCommandSelected); //訂閱指令事件
+        Bus<UnitDeathEvent>.Subscribe(HandleUnitDeath); // 訂閱單位死亡事件
     }
     private void OnDestroy()
     {
@@ -61,8 +62,14 @@ public class PlayerInput : MonoBehaviour
         Bus<UnselectedEvent>.Unsubscribe(HandleUnselected);
         Bus<SpawnUnitEvent>.Unsubscribe(HandleUnitSpawn);
         Bus<CommandSelectedEvent>.Unsubscribe(HandleCommandSelected);
+        Bus<UnitDeathEvent>.Unsubscribe(HandleUnitDeath);
     }
     private void HandleUnitSpawn(SpawnUnitEvent evt) => aliveUnits.Add(evt.SpawnUnit);//當單位出生時，將其添加到存活單位的集合中
+    private void HandleUnitDeath(UnitDeathEvent evt)
+    {
+        aliveUnits.Remove(evt.Unit);
+        selectUnits.Remove(evt.Unit);
+    }
     private void HandleSelected(SelectedEvent evt)
     {
         //沒包含該單位時才+進去，避免重複+到

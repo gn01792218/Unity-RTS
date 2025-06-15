@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 //標示需要NavMeshAgent組件
 //添加了之後，我們就不需要做一大堆的null檢查了
 [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
-public abstract class Unit:CommandableUnit, IMoveable
+public abstract class Unit : CommandableUnit, IMoveable
 {
     public float AgentRadius => agent.radius; //獲取NavMeshAgent的半徑
     private NavMeshAgent agent; //獲取NavMeshAgent組件
@@ -17,7 +17,8 @@ public abstract class Unit:CommandableUnit, IMoveable
         agent = GetComponent<NavMeshAgent>();
         behaviorAgent = GetComponent<BehaviorGraphAgent>();
     }
-    protected override void Start(){
+    protected override void Start()
+    {
         base.Start(); //呼叫父類的Start方法
         Bus<SpawnUnitEvent>.Publish(new SpawnUnitEvent(this)); //發送自己已經出生的消息
     }
@@ -35,5 +36,10 @@ public abstract class Unit:CommandableUnit, IMoveable
     public void Stop()
     {
         behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Stop);//"Commands"對應行為黑板中的變數名稱
+    }
+    private void OnDestroy()
+    {
+        //當單位死亡時，發送死亡事件
+        Bus<UnitDeathEvent>.Publish(new UnitDeathEvent(this));
     }
 }
