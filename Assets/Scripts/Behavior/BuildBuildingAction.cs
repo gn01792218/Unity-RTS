@@ -11,10 +11,13 @@ public partial class BuildBuildingAction : Action
     [SerializeReference] public BlackboardVariable<GameObject> Self;
     [SerializeReference] public BlackboardVariable<BuildingUnitSO> BuildingSO;
     [SerializeReference] public BlackboardVariable<Vector3> TargetLocation;
+    [SerializeReference] public BlackboardVariable<BuildingUnit> BuildingUnderConstruction;
 
     private float startBuildTime;
-    private BuildingUnit building;
+
     private Vector3 startPosition;
+    private Vector3 endPosition;
+    private Renderer buildingRenderer; // 為了建築中動畫，移動的MeshRender。 //為何不移動GameObject? 因為我們要讓建築物在升起的初始，也具有Obstacle計算，因此只移動Mesh才不會導致Obstacle計算在地底時不生效
 
     protected override Status OnStart()
     {
@@ -22,12 +25,13 @@ public partial class BuildBuildingAction : Action
         startBuildTime = Time.time;
 
         //初始化建築物
-        building = GameObject.Instantiate(BuildingSO.Value.Prefab).GetComponent<BuildingUnit>();
+        BuildingUnderConstruction.Value = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation.Value, Quaternion.identity).GetComponent<BuildingUnit>();
 
         //依據建造時間從底下升起
-        var buildingRender = building.MainRender;
-        startPosition = TargetLocation.Value - Vector3.up * buildingRender.bounds.size.y;
-        building.transform.position = startPosition;
+        buildingRenderer = BuildingUnderConstruction.Value.MainRender;
+        startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;
+        endPosition = TargetLocation.Value;
+        buildingRenderer.transform.position = startPosition;
         return Status.Running;
     }
 
@@ -36,8 +40,7 @@ public partial class BuildBuildingAction : Action
         //更新建築升起的位置
         //依據所需建造時間，將開始到完成，序列化0-1
         float normalizedTime = (Time.time - startBuildTime) / BuildingSO.Value.BuildTime;
-        Debug.Log($"normalizedTime : {normalizedTime}; build Time: {BuildingSO.Value.BuildTime}");
-        building.transform.position = Vector3.Lerp(startPosition, TargetLocation.Value, normalizedTime);
+        buildingRenderer.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
         return normalizedTime >=1 ? Status.Success : Status.Running;
     }
 
@@ -45,7 +48,7 @@ public partial class BuildBuildingAction : Action
     {
         if (CurrentStatus == Status.Success)
         {
-            building.enabled = true; //啟動建築
+            BuildingUnderConstruction.Value.enabled = true; //啟動建築
         }
     }
 

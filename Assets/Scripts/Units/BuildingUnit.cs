@@ -5,11 +5,13 @@ using UnityEngine.AI;
 
 public class BuildingUnit : CommandableUnit
 {
-    [field: SerializeField] public MeshRenderer MainRender { get; private set; }
-    [SerializeField] private NavMeshObstacle navMeshObstacle;
     //getter只讀屬性，供外部獲取使用
     public int QueueSize => buildingQueue.Count;
     public UnitSO[] BuildingQueue => buildingQueue.ToArray(); 
+    [field: SerializeField] public MeshRenderer MainRender { get; private set; }
+    [SerializeField] private NavMeshObstacle navMeshObstacle;
+    [SerializeField] private Material primaryMaterial; //主要材質
+
 
     //public屬性，可供外部獲取；並且只有本類能修改
     public float CurrentBuildStartTime { get; private set; } //當前正在生產的開始時間
@@ -26,7 +28,7 @@ public class BuildingUnit : CommandableUnit
     protected override void Start()
     {
         base.Start();
-        navMeshObstacle.enabled = true;
+        if (MainRender != null) MainRender.material = primaryMaterial; //初始化時使用主要材質
     }
     public void BuildUnit(UnitSO unit)
     {
