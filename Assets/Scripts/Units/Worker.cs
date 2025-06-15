@@ -15,6 +15,7 @@ public class Worker : Unit, IBuildingBuilder
       return false;
     }
   }
+  [SerializeField] private Command CancelBuildingCommand; //取消建築的指令，不會出現在第一層指令列表中，是按下建築指令之後才產生的
   protected override void Start()
   {
     base.Start();
@@ -53,6 +54,8 @@ public class Worker : Unit, IBuildingBuilder
     behaviorAgent.SetVariableValue("BuildingGhost", ghostInstance);
     behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.BuildBuilding);
 
+    //更新可用的指令，讓Worker多一個取消建築的指令
+    OverridesAvailableCommands(new Command[] { CancelBuildingCommand });
     return ghostInstance;
   }
 
@@ -60,5 +63,24 @@ public class Worker : Unit, IBuildingBuilder
   {
     // 發送GatherResourceEvent
     Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(Amount, Resources));
+  }
+
+  public void CancelBuilding()
+  {
+    //釋放資源
+    if (behaviorAgent.GetVariable("BuildingGhost", out BlackboardVariable<GameObject> buildingGhost) && buildingGhost.Value != null)
+    {
+      //如果有建築物的預覽，則銷毀它
+      Destroy(buildingGhost.Value);
+    }
+    if (behaviorAgent.GetVariable("BuildBuildingUnderConstruction", out BlackboardVariable<BuildingUnit> buildingUnderConstruction) && buildingUnderConstruction.Value != null)
+    {
+      Destroy(buildingUnderConstruction.Value.gameObject);
+    }
+
+    //恢復可用指令
+    OverridesAvailableCommands(null);
+    //停止移動
+    Stop();
   }
 }

@@ -404,6 +404,7 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 0
   <unitSO>k__BackingField: {fileID: 11400000, guid: 6bd16236e4b26574ba5a85094f13101e, type: 2}
   onSelectDecal: {fileID: 8327965449882544068}
+  CancelBuildingCommand: {fileID: 11400000, guid: 8bcef7fc7fa99084880afb57b449f692, type: 2}
 --- !u!136 &1712542174415614214
 CapsuleCollider:
   m_ObjectHideFlags: 0

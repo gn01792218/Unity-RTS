@@ -39,7 +39,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
         Bus<UnselectedEvent>.Publish(new UnselectedEvent(this));
     }
 
-    public void OverridesAvailableCommands(Command[] commands)
+    public void OverridesAvailableCommands(Command[] commands) // 覆蓋可用的指令列表，即更新可用指令
     {
         if (commands == null || commands.Length == 0)
         {
