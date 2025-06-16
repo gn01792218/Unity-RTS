@@ -39,16 +39,13 @@ public class Worker : Unit, IBuildingBuilder
   public GameObject BuildBuilding(BuildingUnitSO buildingSO, Vector3 targetLocation)
   {
     var ghostInstance = Instantiate(buildingSO.Prefab, targetLocation, Quaternion.identity);
-    if (ghostInstance.TryGetComponent(out BuildingUnit baseBuilding))
-    {
-      baseBuilding.ShowGhostVisuals();
-    }
-    else
+    if (!ghostInstance.TryGetComponent(out BuildingUnit _))
     {
       Debug.LogError($"Missing BaseBuilding on Prefab for BuildingSo ${buildingSO.name}! Cannot build");
       return null;
     }
     //set up blackboard to build
+    
     behaviorAgent.SetVariableValue("BuildBuildingSO", buildingSO);
     behaviorAgent.SetVariableValue("TargetLocation", targetLocation);
     behaviorAgent.SetVariableValue("BuildingGhost", ghostInstance);
@@ -82,5 +79,16 @@ public class Worker : Unit, IBuildingBuilder
     OverridesAvailableCommands(null);
     //停止移動
     Stop();
+  }
+
+  public void ResumeBuilding(BuildingUnit building)
+  {
+    behaviorAgent.SetVariableValue("TargetLocation", building.transform.position);
+    behaviorAgent.SetVariableValue("BuildBuildingUnderConstruction", building);
+    behaviorAgent.SetVariableValue("BuildBuildingSO", building.unitSO);
+    behaviorAgent.SetVariableValue<GameObject>("BuildingGhost", null);
+    behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.BuildBuilding);
+
+    OverridesAvailableCommands(new Command[] { CancelBuildingCommand });
   }
 }

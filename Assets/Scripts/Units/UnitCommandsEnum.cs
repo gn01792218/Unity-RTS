@@ -8,5 +8,5 @@ public enum UnitCommandsEnum
     Stop,
     Gather,
     ReturnResources,
-    BuildBuilding
+    BuildBuilding,
 }

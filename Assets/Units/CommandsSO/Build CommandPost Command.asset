@@ -16,5 +16,5 @@ MonoBehaviour:
   <SlotIndex>k__BackingField: 2
   <RequiresClickToActive>k__BackingField: 1
   <ShowInCommandUI>k__BackingField: 1
-  <building>k__BackingField: {fileID: 11400000, guid: e477a26fa0f13f64d95758d12c54ea17, type: 2}
+  <buildingSo>k__BackingField: {fileID: 11400000, guid: e477a26fa0f13f64d95758d12c54ea17, type: 2}
   <GhostPrefab>k__BackingField: {fileID: 1592564729448149361, guid: 81a271c0f7316fd40a8b5db233c6b805, type: 3}

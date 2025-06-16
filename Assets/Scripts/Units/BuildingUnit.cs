@@ -7,8 +7,9 @@ public class BuildingUnit : CommandableUnit
 {
     //getter只讀屬性，供外部獲取使用
     public int QueueSize => buildingQueue.Count;
-    public UnitSO[] BuildingQueue => buildingQueue.ToArray(); 
+    public UnitSO[] BuildingQueue => buildingQueue.ToArray();
     [field: SerializeField] public MeshRenderer MainRender { get; private set; }
+    [field: SerializeField] public BuildingProgress Progress { get; private set; } = new BuildingProgress(0, 0, BuildingProgress.BuildingState.NotStarted);
     [SerializeField] private NavMeshObstacle navMeshObstacle;
     [SerializeField] private Material primaryMaterial; //主要材質
 
@@ -17,7 +18,7 @@ public class BuildingUnit : CommandableUnit
     public float CurrentBuildStartTime { get; private set; } //當前正在生產的開始時間
     public float CurrentBuildEndTime => CurrentBuildStartTime + CurrentBuildingUnitSO.BuildTime;
     public UnitSO CurrentBuildingUnitSO { get; private set; } //當前正生產的單位資料
-    
+
     //事件的委派類別與其方法定義
     public delegate void QueueUpdateEvent(UnitSO[] unitsInQueue);
     public event QueueUpdateEvent OnQueueUpdated; // evet關鍵字表示只有這個類別可以raise這個event
@@ -25,10 +26,19 @@ public class BuildingUnit : CommandableUnit
     //私有屬性
     private const int MAX_QUEUE_SIZE = 5; //佇列的最大限制
     private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE); //生產佇列
-    protected override void Start()
+    private IBuildingBuilder buildingBuilder; //可能是自己，也可能是別人(如果自己死了的話)!
+    protected override void Start() //在建築腳本被enable時，照我們的邏輯，是在建築完成後才會被enable
     {
         base.Start();
         if (MainRender != null) MainRender.material = primaryMaterial; //初始化時使用主要材質
+        //完成建築
+        Progress = new BuildingProgress(
+            Progress.StartTime,
+            1,
+            BuildingProgress.BuildingState.Completed
+        );
+        buildingBuilder = null; //完成了不需要建築者
+        Bus<UnitDeathEvent>.Unsubscribe(OnUnitDeath); //清除監聽死亡事件
     }
     public void BuildUnit(UnitSO unit)
     {
@@ -51,16 +61,16 @@ public class BuildingUnit : CommandableUnit
 
     public void CancelBuildingUnit(int index)
     {
-        if(index < 0 || index >= buildingQueue.Count)
+        if (index < 0 || index >= buildingQueue.Count)
         {
             Debug.LogError($"輸入的{index}不在buildingQueue的Size : {buildingQueue.Count}範圍內");
         }
         buildingQueue.RemoveAt(index);
-        if(index == 0)
+        if (index == 0)
         {
             //只有一個時，直接取消該coroutine就可以
             StopAllCoroutines(); //coroutines也只會有一個，所以直接全取消即可
-            if(buildingQueue.Count>0) //如果queue中還有東西
+            if (buildingQueue.Count > 0) //如果queue中還有東西
             {
                 //開始另一個製作過程
                 StartCoroutine(DoBuildUnits());
@@ -70,16 +80,39 @@ public class BuildingUnit : CommandableUnit
                 EmitOnQueueUpdated();
             }
         }
-        else{
+        else
+        {
             EmitOnQueueUpdated();
         }
     }
 
-    public void ShowGhostVisuals() //顯示ghostMaterial
+    public void StartBuilding(IBuildingBuilder builder) //顯示ghostMaterial、初始化BuildingProgress
     {
         MainRender = GetComponentInChildren<MeshRenderer>();
         var so = unitSO as BuildingUnitSO;
         MainRender.material = so.PlacementMaterial;
+
+        //設定BuildingProgress的初始狀態
+        buildingBuilder = builder;
+        Progress = new BuildingProgress(
+            Time.time - unitSO.BuildTime * Progress.Progress,
+            Progress.Progress,
+            BuildingProgress.BuildingState.Building);
+        Bus<UnitDeathEvent>.Subscribe(OnUnitDeath);
+    }
+    private void OnUnitDeath(UnitDeathEvent evt)
+    {
+        if (evt.Unit == this)
+        {
+            //如果自己死了，則把buildingBuilder設為null
+            buildingBuilder = null;
+            Progress = new BuildingProgress(
+                Progress.StartTime,
+                (Time.time - Progress.StartTime) / unitSO.BuildTime,
+                BuildingProgress.BuildingState.Paused
+                );
+            Bus<UnitDeathEvent>.Unsubscribe(OnUnitDeath);
+        }
     }
 
     //製做一個Coroutine方法
@@ -100,9 +133,12 @@ public class BuildingUnit : CommandableUnit
         }
         EmitOnQueueUpdated(); //最後沒東西的時候也要發送通知
     }
-
     private void EmitOnQueueUpdated()
     {
         OnQueueUpdated?.Invoke(buildingQueue.ToArray());
+    }
+    private void OnDestroy()
+    {
+        Bus<UnitDeathEvent>.Unsubscribe(OnUnitDeath);
     }
 }

@@ -245,7 +245,7 @@ public class PlayerInput : MonoBehaviour
         for (int i = 0; i < units.Count; i++)
         {
             CommandContext context = new(units[i], hit, i);
-            if (activeCommand.CanHandle(context)) activeCommand.Handle(context);
+            activeCommand.Handle(context);
         }
         activeCommand = null; //執行完之後清除掉, 代表已經執行完成
     }
@@ -270,7 +270,7 @@ public class PlayerInput : MonoBehaviour
                 for (int i = 0; i < units.Count; i++) // 遍歷所有選中的物件
                 {
                     CommandContext context = new(units[i], hit, i);
-                    foreach (Command command in units[i].AvailableCommands) // 遍歷所有可用的指令
+                    foreach (Command command in GetAvailableCommands(units[i])) // 遍歷所有可用的指令
                     {
                         if (command.CanHandle(context)) // 如果該指令可以處理這個單位和擊中點
                         {
@@ -282,6 +282,24 @@ public class PlayerInput : MonoBehaviour
                 }
             }
         }
+    }
+    private List<Command> GetAvailableCommands(Unit unit)
+    {
+        OverrideCommandsCommand[] overrideCommandsCommands = unit.AvailableCommands
+            .Where(command => command is OverrideCommandsCommand)
+            .Cast<OverrideCommandsCommand>()
+            .ToArray();
+        List<Command> availableCommands = new();
+        foreach(OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
+        {
+            availableCommands.AddRange(overrideCommand.Commands
+                .Where(command => command is not OverrideCommandsCommand)
+                ); // 過濾掉 OverrideCommandsCommand 本身
+        }
+        availableCommands.AddRange(unit.AvailableCommands
+                .Where(command => command is not OverrideCommandsCommand)
+                ); // 添加非 OverrideCommandsCommand 的指令
+        return availableCommands;
     }
     private void HandleZooming()
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 [CreateAssetMenu(fileName = "Override Commands", menuName = "Commands/Actions/OverrideCommandsCommand", order = 110)]
-public class OverridesAvailableCommands : Command
+public class OverrideCommandsCommand : Command
 {
     [field: SerializeField] public Command[] Commands { get; private set; }
     public override bool CanHandle(CommandContext context)
