@@ -7380,10 +7380,14 @@ MonoBehaviour:
   interactableLayers:
     serializedVersion: 2
     m_Bits: 704
-  moveableLayers:
+  walkableLayers:
     serializedVersion: 2
-    m_Bits: 272
+    m_Bits: 256
   selectionRect: {fileID: 1147045130}
+  errorTintColor: {r: 1, g: 0, b: 0, a: 1}
+  errorFresnelColor: {r: 4, g: 1.7, b: 0, a: 2}
+  availableToPlaceTintColor: {r: 0.2, g: 0.65, b: 1, a: 2}
+  availableToPlaceFresnelColor: {r: 4, g: 1.7, b: 0, a: 2}
 --- !u!4 &689484763
 Transform:
   m_ObjectHideFlags: 0

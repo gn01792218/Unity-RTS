@@ -17,13 +17,18 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] CamaraConfig camaraConfig; // 引用相機配置類別
     [SerializeField] private LayerMask selectableLayers; // 可被玩家選擇的圖層有哪些
     [SerializeField] private LayerMask interactableLayers; // 可和玩家互動的圖層有哪些 - 如礦點
-    [SerializeField] private LayerMask moveableLayers; // 可供移動的圖層
+    [SerializeField] private LayerMask walkableLayers; // 可供移動的圖層
     [SerializeField] private RectTransform selectionRect; // 框選的遮罩
+    [SerializeField] [ColorUsage(showAlpha:true, hdr:true)]private Color errorTintColor = Color.red; // 錯誤時的著色器顏色
+    [SerializeField] [ColorUsage(showAlpha:true, hdr:true)]private Color errorFresnelColor = new(4, 1.7f, 0, 2); 
+    [SerializeField] [ColorUsage(showAlpha:true, hdr:true)]private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1, 2); 
+    [SerializeField] [ColorUsage(showAlpha:true, hdr:true)]private Color availableToPlaceFresnelColor = new(4f, 1.7f, 0, 2); 
 
     private Vector2 mouseStartPosition; // 滑鼠開始位置
     private InputAction moveAction;
     private Command activeCommand;
     private GameObject ghostInstance;
+    private MeshRenderer ghostRenderer; // 用於顯示建築物的鬼魂
     private bool wasMouseDownOnUI; //滑鼠是否點在UI上面?
     private CinemachineFollow cinemachineFollow; // 引用 CinemachineFollow 組件
     private Vector3 startingTrackedObjectOffset; // 初始的 Tracked Object Offset
@@ -32,6 +37,8 @@ public class PlayerInput : MonoBehaviour
     private List<ISelectable> selectUnits = new List<ISelectable>(12); //儲存當前所選的物件
     private HashSet<Unit> dragSelectedUnits = new HashSet<Unit>(12); // 儲存框選時選中的單位
     private HashSet<Unit> aliveUnits = new HashSet<Unit>(100); // 儲存所有存活的單位
+    private static readonly int TINT = Shader.PropertyToID("_Tint"); // 用於著色器的屬性ID
+    private static readonly int FRESNEL = Shader.PropertyToID("_FresnelColor"); // 用於著色器的屬性ID
 
     private void Awake()
     {
@@ -79,7 +86,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
     private void HandleUnselected(UnselectedEvent evt) => selectUnits.Remove(evt.SelectdObject); // 移除取消選中的物件
-    private void HandleCommandSelected(CommandSelectedEvent evt)
+    private void HandleCommandSelected(CommandSelectedEvent evt) //按下指令的時候
     {
         activeCommand = evt.SelectdCommand;
         if (!activeCommand.RequiresClickToActive) //處理按下按鈕立即執行的指令, 如生產單位的指令
@@ -89,6 +96,7 @@ public class PlayerInput : MonoBehaviour
         else if (activeCommand is BuildBuildingCommand buildCommand) //處理建築類別的
         {
             ghostInstance = Instantiate(buildCommand.GhostPrefab);
+            ghostRenderer = ghostInstance.GetComponentInChildren<MeshRenderer>();
         }
     }
     private void InitCinemachineFollow()
@@ -116,11 +124,11 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        HandleGhost(); //建築指令按下去後的顯示
         HandleZooming();
         HandlePanning();
         HandleUnitSelection();
         HandleRightClick();
+        HandleGhost(); //建築指令按下去後的顯示
     }
     private void HandleUnitSelection()
     {
@@ -225,7 +233,7 @@ public class PlayerInput : MonoBehaviour
         }
         else if (activeCommand != null // 射線擊中地板時 && 不是點在UI上  && 有當前指令時 
                 && !wasMouseDownOnUI
-                && Physics.Raycast(cameraRay, out hit, float.MaxValue, moveableLayers | interactableLayers))
+                && Physics.Raycast(cameraRay, out hit, float.MaxValue, walkableLayers | interactableLayers))
         {
             ActivateCommand(hit);
         }
@@ -255,7 +263,7 @@ public class PlayerInput : MonoBehaviour
         if (Mouse.current.rightButton.wasReleasedThisFrame)
         {
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, moveableLayers | interactableLayers))
+            if (Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, walkableLayers | interactableLayers))
             {
                 //由於需要的agent radius在Unit類別裡面
                 //這裡暫時轉換一下，之後要重構
@@ -363,7 +371,13 @@ public class PlayerInput : MonoBehaviour
             return;
         }
         //使用GetMouseMovement方法，更新ghostInstance的位置
-        ghostInstance.transform.position = GetMouseGroundPosition();
+        var mousePosition = GetMouseGroundPosition();
+        ghostInstance.transform.position = mousePosition;
+        //設置顏色
+        BuildBuildingCommand buildCommand = activeCommand as BuildBuildingCommand;
+        bool canBuild = buildCommand.AllRestrictionsPass(mousePosition);
+        ghostRenderer.material.SetColor(TINT, canBuild ? availableToPlaceTintColor : errorTintColor);
+        ghostRenderer.material.SetColor(FRESNEL, canBuild ? availableToPlaceFresnelColor : errorFresnelColor);
     }
     private void DropGhostInstance()
     {
@@ -375,7 +389,7 @@ public class PlayerInput : MonoBehaviour
         // 從螢幕滑鼠座標發射射線
         Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
         // 嘗試射到地面圖層
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, moveableLayers))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, walkableLayers))
         {
             return hit.point; // 回傳地面交點
         }

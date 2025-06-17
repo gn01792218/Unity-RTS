@@ -18,3 +18,6 @@ MonoBehaviour:
   <ShowInCommandUI>k__BackingField: 1
   <buildingSo>k__BackingField: {fileID: 11400000, guid: e477a26fa0f13f64d95758d12c54ea17, type: 2}
   <GhostPrefab>k__BackingField: {fileID: 1592564729448149361, guid: 81a271c0f7316fd40a8b5db233c6b805, type: 3}
+  <RestrictionsSO>k__BackingField:
+  - {fileID: 11400000, guid: c068aa1e336c85a4083dd4e3165a26ae, type: 2}
+  - {fileID: 11400000, guid: a7254b399097e5e4b95fd6003017a589, type: 2}
