@@ -20,7 +20,7 @@ public class BuildBuildingCommand : Command
                      || buildingUnit.Progress.State == BuildingProgress.BuildingState.NotStarted);
         }
 
-        return AllRestrictionsPass(context.Hit.point);
+        return HaveEnoughResources() && AllRestrictionsPass(context.Hit.point);
     }
 
     public override void Handle(CommandContext context)
@@ -36,7 +36,7 @@ public class BuildBuildingCommand : Command
         {
             //如果點擊到空地，則開始建造
             //檢查是否符合建造條件
-            if (!AllRestrictionsPass(context.Hit.point)) return;
+            if (!AllRestrictionsPass(context.Hit.point) || !HaveEnoughResources()) return;
             builder.BuildBuilding(buildingSo, context.Hit.point);
         }
     }
@@ -44,4 +44,10 @@ public class BuildBuildingCommand : Command
     //檢查所有的限制條件是否都通過
     public bool AllRestrictionsPass(Vector3 point) =>
         RestrictionsSO.Length == 0 || RestrictionsSO.All(restriction => restriction.CanPlace(point));
+    private bool HaveEnoughResources()
+    {
+        //檢查是否有足夠的資源來建造單位
+        return buildingSo.ResourceCostSO.MineralCost <= PlayerResources.Minerals &&
+            buildingSo.ResourceCostSO.GasCost <= PlayerResources.Gas;
+    }
 }

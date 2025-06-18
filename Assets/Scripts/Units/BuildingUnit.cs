@@ -40,14 +40,17 @@ public class BuildingUnit : CommandableUnit
         buildingBuilder = null; //完成了不需要建築者
         Bus<UnitDeathEvent>.Unsubscribe(OnUnitDeath); //清除監聽死亡事件
     }
-    public void BuildUnit(UnitSO unit)
+    public void BuildUnit(UnitSO unitSO)
     {
         if (buildingQueue.Count == MAX_QUEUE_SIZE)
         {
             Debug.LogError("生產佇列已經滿了!");
             return;
         }
-        buildingQueue.Add(unit); //把要生產的單位加入佇列
+        //交錢
+        Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(-unitSO.ResourceCostSO.GasCost, PlayerResources.GasSO));
+        Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(-unitSO.ResourceCostSO.MineralCost, PlayerResources.MineralSO));
+        buildingQueue.Add(unitSO); //把要生產的單位加入佇列
         if (buildingQueue.Count == 1)
         {
             //開始一個Coroutine
@@ -65,6 +68,11 @@ public class BuildingUnit : CommandableUnit
         {
             Debug.LogError($"輸入的{index}不在buildingQueue的Size : {buildingQueue.Count}範圍內");
         }
+        //退款
+        var unitSO = buildingQueue[index];
+        Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(unitSO.ResourceCostSO.GasCost, PlayerResources.GasSO));
+        Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(unitSO.ResourceCostSO.MineralCost, PlayerResources.MineralSO));
+        //從佇列中移除
         buildingQueue.RemoveAt(index);
         if (index == 0)
         {

@@ -8,4 +8,5 @@ public class UnitSO : ScriptableObject
     [field: SerializeField] public float BuildTime { get; private set; }
     [field: SerializeField] public float Health { get; private set; } = 100f;
     [field: SerializeField] public Sprite Icon { get; private set; }
+    [field: SerializeField] public UnitResourceCostSO ResourceCostSO { get; private set; }
 }

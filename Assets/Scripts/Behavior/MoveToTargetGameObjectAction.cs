@@ -17,7 +17,6 @@ public partial class MoveToTargetGameObjectAction : Action
 
     protected override Status OnStart()
     {
-        Debug.Log("開始前往某處");
         if (!Agent.Value.TryGetComponent(out agent) || TargetGameObject.Value == null)
         {
             Debug.LogError("Agent 或 TargetGameObject 未正確設置！");
@@ -35,7 +34,6 @@ public partial class MoveToTargetGameObjectAction : Action
         //因為agent還沒有開始移動，這是Unity的bug   
         //所以Update中要加上agent.pathPending來判斷是否還在計算路徑
         agent.SetDestination(targetPosition);
-        Debug.Log($"前往目標{TargetGameObject.Name}");
         return Status.Running;
     }
 
@@ -46,18 +44,11 @@ public partial class MoveToTargetGameObjectAction : Action
         //如果不加上這個判斷，會導致agent.remainingDistance是就直接被Status.Success返回了，導致無法移動到該目標!
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            Debug.Log($"Agent 到達目標位置: {TargetGameObject.Value.name}");
+            // Debug.Log($"Agent 到達目標位置: {TargetGameObject.Value.name}");
             return Status.Success;
         }
-        Debug.Log($"Agent 移動中: {TargetGameObject.Value.name}");
+        // Debug.Log($"Agent 移動中: {TargetGameObject.Value.name}");
         return Status.Running;
-    }
-
-    protected override void OnEnd()
-    {
-        //可以在這裡面直接執行，另一個Action，例如StopMoveAction嗎?
-        Debug.Log("結束前往某地");
-        // if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
     }
 
     //優化目標點選擇
@@ -68,12 +59,10 @@ public partial class MoveToTargetGameObjectAction : Action
         if (TargetGameObject.Value.TryGetComponent(out Collider collider))
         {
             targetPosition = collider.ClosestPoint(agent.transform.position);
-            Debug.Log($"使用ClosestPoint獲取目標位置: {targetPosition}, colliderName: {collider.name}");
         }
         else
         {
             targetPosition = TargetGameObject.Value.transform.position;
-            Debug.Log($"使用Transform獲取目標位置: {targetPosition}");
         }
         return targetPosition;
     }

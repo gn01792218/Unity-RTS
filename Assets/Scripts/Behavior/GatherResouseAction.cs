@@ -55,12 +55,10 @@ public partial class GatherResouseAction : Action
         if (CurrentStatus == Status.Success)
         {
             Amount.Value = GatherableResources.Value.EndGather(); //結束採集，並獲取採集的數量
-            Debug.Log($"採集資源: {GatherableResources.Value.name} 數量: {Amount.Value}");
         }
         else
         {
             GatherableResources.Value.AbortGather(); //如果採集還在進行中，則中止採集
-            Debug.Log($"中止採集資源: {GatherableResources.Value.name}，因為採集失敗或被取消");  
         }
     }
 }

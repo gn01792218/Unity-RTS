@@ -1,3 +1,4 @@
+using System;
 using Unity.Behavior;
 using UnityEngine;
 
@@ -45,7 +46,6 @@ public class Worker : Unit, IBuildingBuilder
       return null;
     }
     //set up blackboard to build
-    
     behaviorAgent.SetVariableValue("BuildBuildingSO", buildingSO);
     behaviorAgent.SetVariableValue("TargetLocation", targetLocation);
     behaviorAgent.SetVariableValue("BuildingGhost", ghostInstance);
@@ -53,6 +53,9 @@ public class Worker : Unit, IBuildingBuilder
 
     //更新可用的指令，讓Worker多一個取消建築的指令
     OverridesAvailableCommands(new Command[] { CancelBuildingCommand });
+    //交錢
+    Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(-buildingSO.ResourceCostSO.GasCost, PlayerResources.GasSO));
+    Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(-buildingSO.ResourceCostSO.MineralCost, PlayerResources.MineralSO));
     return ghostInstance;
   }
 
@@ -72,8 +75,13 @@ public class Worker : Unit, IBuildingBuilder
     }
     if (behaviorAgent.GetVariable("BuildBuildingUnderConstruction", out BlackboardVariable<BuildingUnit> buildingUnderConstruction) && buildingUnderConstruction.Value != null)
     {
+      //打75折退款
+      var buildingSO = buildingUnderConstruction.Value.unitSO;
+      Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(Mathf.FloorToInt(buildingSO.ResourceCostSO.GasCost * 0.75f), PlayerResources.GasSO));
+      Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(Mathf.FloorToInt(buildingSO.ResourceCostSO.MineralCost * 0.75f), PlayerResources.MineralSO));
       Destroy(buildingUnderConstruction.Value.gameObject);
     }
+
 
     //恢復可用指令
     OverridesAvailableCommands(null);
