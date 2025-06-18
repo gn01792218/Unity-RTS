@@ -50,4 +50,9 @@ public class BuildBuildingCommand : Command
         return buildingSo.ResourceCostSO.MineralCost <= PlayerResources.Minerals &&
             buildingSo.ResourceCostSO.GasCost <= PlayerResources.Gas;
     }
+
+    public override bool IsAvailable(CommandContext? context = null)
+    {
+        return HaveEnoughResources();
+    }
 }

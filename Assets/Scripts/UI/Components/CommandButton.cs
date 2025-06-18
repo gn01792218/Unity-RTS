@@ -16,7 +16,7 @@ public class CommandButton : MonoBehaviour, IUIElement<Command, UnityAction>
     {
         button.onClick.RemoveAllListeners(); //確保清除不必要的監聽，因為可能有沒有call Disable的情況
         SetIcon(command.Icon);
-        button.interactable = true;
+        button.interactable = command.IsAvailable();
         button.onClick.AddListener(onClick);
     }
     public void Disable()

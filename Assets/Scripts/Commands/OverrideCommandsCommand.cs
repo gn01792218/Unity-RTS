@@ -12,4 +12,8 @@ public class OverrideCommandsCommand : Command
     {
         context.Unit.OverridesAvailableCommands(Commands);
     }
+    public override bool IsAvailable(CommandContext? context = null)
+    {
+        return true;
+    }
 }

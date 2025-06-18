@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,9 @@ public class RuntimeUI : MonoBehaviour
         Bus<SelectedEvent>.Subscribe(HandleUnitSelected);
         Bus<UnselectedEvent>.Subscribe(HandleUnitUnselected);
         Bus<UnitDeathEvent>.Subscribe(HandleUnitDeath);
+        Bus<GatherResourceEvent>.Subscribe(HandleGatherResource);
     }
+
     private void Start()
     {
         commandUI.Disable();
@@ -22,6 +25,7 @@ public class RuntimeUI : MonoBehaviour
         Bus<SelectedEvent>.Unsubscribe(HandleUnitSelected);
         Bus<UnselectedEvent>.Unsubscribe(HandleUnitUnselected);
         Bus<UnitDeathEvent>.Unsubscribe(HandleUnitDeath);
+        Bus<GatherResourceEvent>.Unsubscribe(HandleGatherResource);
     }
     private void HandleUnitSelected(SelectedEvent evt)
     {
@@ -59,5 +63,11 @@ public class RuntimeUI : MonoBehaviour
                 buildBuildingUI.Disable();
             }
         }
+    }
+
+    private void HandleGatherResource(GatherResourceEvent evt)
+    {
+        //更新CommandUI
+       commandUI.EnableFor(selectedUnits);
     }
 }

@@ -14,6 +14,12 @@ public class BuildUnitCommand : Command
         BuildingUnit buildingUnit = context.Unit as BuildingUnit; //將單位轉換為Unit類別，為了獲取AgentRadius
         buildingUnit.BuildUnit(unitSO);
     }
+
+    public override bool IsAvailable(CommandContext? context = null)
+    {
+        return HaveEnoughResources();
+    }
+
     private bool HaveEnoughResources()
     {
         //檢查是否有足夠的資源來建造單位

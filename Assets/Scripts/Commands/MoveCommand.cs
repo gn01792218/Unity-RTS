@@ -51,4 +51,8 @@ public class MoveCommand : Command
         //否則會有些許誤差~就停下來，導致圓圈不美麗
         //當然如果想要有比較隨興的排列，那麼也可以不要歸0
     }
+    public override bool IsAvailable(CommandContext? context = null)
+    {
+        return true;
+    }
 }

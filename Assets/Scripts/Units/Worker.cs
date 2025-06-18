@@ -50,7 +50,6 @@ public class Worker : Unit, IBuildingBuilder
     behaviorAgent.SetVariableValue("TargetLocation", targetLocation);
     behaviorAgent.SetVariableValue("BuildingGhost", ghostInstance);
     behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.BuildBuilding);
-
     //更新可用的指令，讓Worker多一個取消建築的指令
     OverridesAvailableCommands(new Command[] { CancelBuildingCommand });
     //交錢

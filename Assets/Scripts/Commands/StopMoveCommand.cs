@@ -12,4 +12,8 @@ public class StopMoveCommand : Command
         Unit unit = context.Unit as Unit; //將單位轉換為Unit類別，為了獲取AgentRadius
         unit.Stop();
     }
+    public override bool IsAvailable(CommandContext? context = null)
+    {
+        return true;
+    }
 }

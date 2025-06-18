@@ -16,4 +16,8 @@ public class ReturnResourceCommand : Command
         Worker worker = context.Unit as Worker;
         worker.ReturnResources(context.Hit.collider.gameObject);
     }
+    public override bool IsAvailable(CommandContext? context = null)
+    {
+        return true;
+    }
 }

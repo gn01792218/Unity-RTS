@@ -16,4 +16,9 @@ public class GatherResourceCommand : Command
         Worker worker = context.Unit as Worker;
         worker.Gather(context.Hit.collider.GetComponent<GatherableResource>()); //叫工人去採集 
     }
+
+    public override bool IsAvailable(CommandContext? context)
+    {
+        return true;
+    }
 }
