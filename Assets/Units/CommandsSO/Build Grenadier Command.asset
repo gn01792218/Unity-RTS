@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa40762f084d27f40a65ae9e367c72bf, type: 3}
   m_Name: Build Grenadier Command
   m_EditorClassIdentifier: 
+  <CommandName>k__BackingField: Build Grenadier
   <Icon>k__BackingField: {fileID: 21300000, guid: 920f021a2d26a374593bb761fa77d29d, type: 3}
   <SlotIndex>k__BackingField: 0
   <RequiresClickToActive>k__BackingField: 0
+  <ShowInCommandUI>k__BackingField: 1
   <unitSO>k__BackingField: {fileID: 11400000, guid: ed1b9b35782c7414fbb7297fcbf62556, type: 2}

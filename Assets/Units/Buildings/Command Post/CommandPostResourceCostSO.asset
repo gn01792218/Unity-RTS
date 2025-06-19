@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: CommandPostResourceCostSO
   m_EditorClassIdentifier: 
   <MineralCost>k__BackingField: 100
-  <GasCost>k__BackingField: 0
+  <GasCost>k__BackingField: 10

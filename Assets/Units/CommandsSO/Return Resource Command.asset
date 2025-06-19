@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5822bea7a8d81444ab1079225a4aa559, type: 3}
   m_Name: Return Resource Command
   m_EditorClassIdentifier: 
+  <CommandName>k__BackingField: Return Resource
   <Icon>k__BackingField: {fileID: 0}
   <SlotIndex>k__BackingField: 0
   <RequiresClickToActive>k__BackingField: 0

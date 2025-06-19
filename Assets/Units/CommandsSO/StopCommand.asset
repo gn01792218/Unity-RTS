@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17981520da584db4d9ef0015330844f0, type: 3}
   m_Name: StopCommand
   m_EditorClassIdentifier: 
+  <CommandName>k__BackingField: Stop
   <Icon>k__BackingField: {fileID: 21300000, guid: 1a3a199fa1bcd2642a8472336cb43de1, type: 3}
   <SlotIndex>k__BackingField: 3
   <RequiresClickToActive>k__BackingField: 0
+  <ShowInCommandUI>k__BackingField: 1

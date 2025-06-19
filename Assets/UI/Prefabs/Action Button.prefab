@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 597b527d46f90dd4aa899cd65aa49f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <RectTransform>k__BackingField: {fileID: 8142159870844363649}
   <HoverDelay>k__BackingField: 0.5
   text: {fileID: 753312127254192795}
 --- !u!1 &4803793363255682526
@@ -183,8 +184,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

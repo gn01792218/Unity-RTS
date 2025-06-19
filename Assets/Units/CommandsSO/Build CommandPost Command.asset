@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfa0d0e46d51c714aa05d00c9f8d940d, type: 3}
   m_Name: Build CommandPost Command
   m_EditorClassIdentifier: 
+  <CommandName>k__BackingField: Build CommandPost
   <Icon>k__BackingField: {fileID: 21300000, guid: dfebbdf93f58d764ab9aa4d54edd629e, type: 3}
   <SlotIndex>k__BackingField: 2
   <RequiresClickToActive>k__BackingField: 1
