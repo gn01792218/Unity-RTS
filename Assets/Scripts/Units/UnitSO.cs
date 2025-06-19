@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UnitSO", menuName = "SO/UnitSo")]
 public class UnitSO : ScriptableObject
 {
+    [field: SerializeField] public string UnitName { get; private set; }
     [field: SerializeField] public GameObject Prefab { get; private set; }
     [field: SerializeField] public float BuildTime { get; private set; }
     [field: SerializeField] public float Health { get; private set; } = 100f;

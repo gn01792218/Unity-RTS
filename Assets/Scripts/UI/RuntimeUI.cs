@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RuntimeUI : MonoBehaviour
 {
     [SerializeField] private CommandUI commandUI;
     [SerializeField] private BuildBuildingUI buildBuildingUI;
+    [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI; //單選時的UI
+    [SerializeField] private UnitIconUI unitIconUI; //單選時的Unit Icon顯示
     private HashSet<CommandableUnit> selectedUnits = new(12);
     private void Awake()
     {
@@ -19,6 +22,8 @@ public class RuntimeUI : MonoBehaviour
     {
         commandUI.Disable();
         buildBuildingUI.Disable();
+        unitIconUI.Disable();
+        singleUnitSelectedUI.Disable();
     }
     private void OnDestroy()
     {
@@ -32,12 +37,7 @@ public class RuntimeUI : MonoBehaviour
         if (evt.SelectdObject is CommandableUnit unit)
         {
             selectedUnits.Add(unit);
-            commandUI.EnableFor(selectedUnits);
-
-        }
-        if (evt.SelectdObject is BuildingUnit building && selectedUnits.Count == 1) //只有單選到building才會顯示唷
-        {
-            buildBuildingUI.EnableFor(building);
+            RefreshUI();
         }
     }
     private void HandleUnitUnselected(UnselectedEvent evt)
@@ -45,11 +45,7 @@ public class RuntimeUI : MonoBehaviour
         if (evt.SelectdObject is CommandableUnit unit)
         {
             selectedUnits.Remove(unit);
-            commandUI.Disable();
-            if (unit is BuildingUnit)
-            {
-                buildBuildingUI.Disable();
-            }
+            RefreshUI();
         }
     }
     private void HandleUnitDeath(UnitDeathEvent evt)
@@ -57,17 +53,52 @@ public class RuntimeUI : MonoBehaviour
         if (evt.Unit is CommandableUnit unit)
         {
             selectedUnits.Remove(unit);
-            commandUI.Disable();
-            if (unit is BuildingUnit)
-            {
-                buildBuildingUI.Disable();
-            }
+            RefreshUI();
         }
     }
-
     private void HandleGatherResource(GatherResourceEvent evt)
     {
         //更新CommandUI
-       commandUI.EnableFor(selectedUnits);
+        commandUI.EnableFor(selectedUnits);
+    }
+    private void RefreshUI()
+    {
+        //框選多的個時候
+        if (selectedUnits.Count > 0)
+        {
+            //1.更新指令UI
+            commandUI.EnableFor(selectedUnits);
+
+            //2.更新單選的UI指令
+            if (selectedUnits.Count == 1)
+            {
+                var selectedUnit = selectedUnits.First();
+                //1.更新單位圖示UI
+                unitIconUI.EnableFor(selectedUnit);
+                singleUnitSelectedUI.EnableFor(selectedUnit);
+                //2.建築物的UI
+                if (selectedUnit is BuildingUnit building)
+                {
+                    buildBuildingUI.EnableFor(building);
+                }
+                else
+                {
+                    buildBuildingUI.Disable();
+                }
+            }
+            else //多選時
+            {
+                unitIconUI.Disable();
+                singleUnitSelectedUI.Disable();
+                buildBuildingUI.Disable();
+            }
+        }
+        else //沒東西時
+        {
+            commandUI.Disable();
+            buildBuildingUI.Disable();
+            unitIconUI.Disable();
+            singleUnitSelectedUI.Disable();
+        }
     }
 }

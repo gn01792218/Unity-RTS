@@ -6629,6 +6629,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commandUI: {fileID: 1741608388}
   buildBuildingUI: {fileID: 1619984283}
+  singleUnitSelectedUI: {fileID: 1315305436}
+  unitIconUI: {fileID: 1439996932}
 --- !u!1001 &646904507
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15099,6 +15101,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1315305435}
+  - component: {fileID: 1315305436}
   m_Layer: 5
   m_Name: Single Unit Container
   m_TagString: Untagged
@@ -15128,6 +15131,19 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: -200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1315305436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315305434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04f68f2196f99134085fc2ffa0b0499c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: {fileID: 1266750878}
 --- !u!1001 &1316927690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17823,6 +17839,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1439996931}
+  - component: {fileID: 1439996932}
   m_Layer: 5
   m_Name: Selected Unit Icon Container
   m_TagString: Untagged
@@ -17851,6 +17868,20 @@ RectTransform:
   m_AnchoredPosition: {x: 100.000046, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1439996932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439996930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b90c76aac6267c42adac08bf686dede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 1431966782}
+  healthText: {fileID: 1936917055}
 --- !u!1 &1441022221
 GameObject:
   m_ObjectHideFlags: 0
