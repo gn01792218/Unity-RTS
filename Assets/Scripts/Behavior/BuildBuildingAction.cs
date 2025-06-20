@@ -26,7 +26,8 @@ public partial class BuildBuildingAction : Action
 
         //初始化建築物
         BuildingUnderConstruction.Value = GameObject.Instantiate(BuildingSO.Value.Prefab, TargetLocation.Value, Quaternion.identity).GetComponent<BuildingUnit>();
-
+        //開始建築物的Progress
+        BuildingUnderConstruction.Value.StartBuilding(Self.Value.GetComponent<IBuildingBuilder>());
         //依據建造時間從底下升起
         buildingRenderer = BuildingUnderConstruction.Value.MainRender;
         startPosition = TargetLocation.Value - Vector3.up * buildingRenderer.bounds.size.y;

@@ -22,7 +22,7 @@ public class CommandUI : MonoBehaviour, IUIElement<HashSet<CommandableUnit>>
     {
         HashSet<Command> availableCommands = new(9); //按鈕介面最多可以放9個按鈕而已
         foreach(CommandableUnit unit in selectunits){
-            availableCommands.UnionWith(unit.AvailableCommands); //使用UnionWith確保不會重複+到一樣的指令
+            if(unit.AvailableCommands != null) availableCommands.UnionWith(unit.AvailableCommands); //使用UnionWith確保不會重複+到一樣的指令
         }
         for(int i =0; i< commandButtons.Length; i++){
             Command commandForSlot = availableCommands.Where(command => command.SlotIndex == i && command.ShowInCommandUI).FirstOrDefault();

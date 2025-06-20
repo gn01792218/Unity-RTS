@@ -80,8 +80,6 @@ public class Worker : Unit, IBuildingBuilder
       Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(Mathf.FloorToInt(buildingSO.ResourceCostSO.MineralCost * 0.75f), PlayerResources.MineralSO));
       Destroy(buildingUnderConstruction.Value.gameObject);
     }
-
-
     //恢復可用指令
     OverridesAvailableCommands(null);
     //停止移動

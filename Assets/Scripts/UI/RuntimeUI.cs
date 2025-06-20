@@ -6,9 +6,9 @@ using UnityEngine;
 public class RuntimeUI : MonoBehaviour
 {
     [SerializeField] private CommandUI commandUI;
-    [SerializeField] private BuildBuildingUI buildBuildingUI;
-    [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI; //單選時的UI
+    [SerializeField] private BuildingSelectedUI buildingSelectedUI;
     [SerializeField] private UnitIconUI unitIconUI; //單選時的Unit Icon顯示
+    [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI; //單選時的UI
     private HashSet<CommandableUnit> selectedUnits = new(12);
     private void Awake()
     {
@@ -21,7 +21,7 @@ public class RuntimeUI : MonoBehaviour
     private void Start()
     {
         commandUI.Disable();
-        buildBuildingUI.Disable();
+        buildingSelectedUI.Disable();
         unitIconUI.Disable();
         singleUnitSelectedUI.Disable();
     }
@@ -50,11 +50,11 @@ public class RuntimeUI : MonoBehaviour
     }
     private void HandleUnitDeath(UnitDeathEvent evt)
     {
-        if (evt.Unit is CommandableUnit unit)
-        {
-            selectedUnits.Remove(unit);
+        // if (evt.Unit is CommandableUnit unit)
+        // {
+            selectedUnits.Remove(evt.Unit);
             RefreshUI();
-        }
+        // }
     }
     private void HandleGatherResource(GatherResourceEvent evt)
     {
@@ -75,28 +75,30 @@ public class RuntimeUI : MonoBehaviour
                 var selectedUnit = selectedUnits.First();
                 //1.更新單位圖示UI
                 unitIconUI.EnableFor(selectedUnit);
-                singleUnitSelectedUI.EnableFor(selectedUnit);
+
                 //2.建築物的UI
                 if (selectedUnit is BuildingUnit building)
                 {
-                    buildBuildingUI.EnableFor(building);
+                    singleUnitSelectedUI.Disable();
+                    buildingSelectedUI.EnableFor(building);
                 }
-                else
+                else //選到非建築物的單位時
                 {
-                    buildBuildingUI.Disable();
+                    buildingSelectedUI.Disable();
+                    singleUnitSelectedUI.EnableFor(selectedUnit);
                 }
             }
             else //多選時
             {
                 unitIconUI.Disable();
                 singleUnitSelectedUI.Disable();
-                buildBuildingUI.Disable();
+                buildingSelectedUI.Disable();
             }
         }
         else //沒東西時
         {
             commandUI.Disable();
-            buildBuildingUI.Disable();
+            buildingSelectedUI.Disable();
             unitIconUI.Disable();
             singleUnitSelectedUI.Disable();
         }

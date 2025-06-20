@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6373942607041070935}
   - component: {fileID: 4998999097916986450}
   - component: {fileID: 5353374694002613806}
+  - component: {fileID: 2115234063178354583}
   m_Layer: 6
   m_Name: Air Transport
   m_TagString: Untagged
@@ -148,8 +149,28 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
-  unitSO: {fileID: 11400000, guid: ac67e6967080a28438515bafd8d108b6, type: 2}
+  <unitSO>k__BackingField: {fileID: 11400000, guid: ac67e6967080a28438515bafd8d108b6, type: 2}
   onSelectDecal: {fileID: 7631563231240490934}
+  CancelBuildingCommand: {fileID: 11400000, guid: 8bcef7fc7fa99084880afb57b449f692, type: 2}
+--- !u!114 &2115234063178354583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076983579694789324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Graph: {fileID: 0}
+  m_BlackboardVariableOverridesList: []
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &2638826895934667707
 GameObject:
   m_ObjectHideFlags: 0

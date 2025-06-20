@@ -38,6 +38,7 @@ public class BuildingUnit : CommandableUnit
             BuildingProgress.BuildingState.Completed
         );
         buildingBuilder = null; //完成了不需要建築者
+        Bus<SpawnBuildingEvent>.Publish(new SpawnBuildingEvent(this)); //發送建築出生通知
         Bus<UnitDeathEvent>.Unsubscribe(OnUnitDeath); //清除監聽死亡事件
     }
     public void BuildUnit(UnitSO unitSO)
