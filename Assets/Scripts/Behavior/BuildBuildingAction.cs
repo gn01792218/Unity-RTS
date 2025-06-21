@@ -18,6 +18,7 @@ public partial class BuildBuildingAction : Action
     private Vector3 startPosition;
     private Vector3 endPosition;
     private Renderer buildingRenderer; // 為了建築中動畫，移動的MeshRender。 //為何不移動GameObject? 因為我們要讓建築物在升起的初始，也具有Obstacle計算，因此只移動Mesh才不會導致Obstacle計算在地底時不生效
+    private float targetHealth;
 
     protected override Status OnStart()
     {
@@ -38,11 +39,24 @@ public partial class BuildBuildingAction : Action
 
     protected override Status OnUpdate()
     {
+        //更新血量
+        targetHealth += Time.deltaTime * (BuildingSO.Value.Health / BuildingSO.Value.BuildTime);
+        HealthUpdate();
         //更新建築升起的位置
         //依據所需建造時間，將開始到完成，序列化0-1
         float normalizedTime = (Time.time - startBuildTime) / BuildingSO.Value.BuildTime;
         buildingRenderer.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime);
-        return normalizedTime >=1 ? Status.Success : Status.Running;
+        return normalizedTime >= 1 ? Status.Success : Status.Running;
+    }
+
+    private void HealthUpdate()
+    {
+        if (targetHealth >= 1)
+        {
+            int healAmount = Mathf.FloorToInt(targetHealth);
+            BuildingUnderConstruction.Value.Heal(healAmount);
+            targetHealth -= healAmount;
+        }
     }
 
     protected override void OnEnd()

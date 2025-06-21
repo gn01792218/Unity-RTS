@@ -4,12 +4,16 @@ using UnityEngine.Rendering.Universal;
 public abstract class CommandableUnit : MonoBehaviour, ISelectable
 {
     [field: SerializeField] public Command[] AvailableCommands { get; private set; } //裝載各種指令
-    [field: SerializeField] public float CurrentHealth { get; private set; }
-    [field: SerializeField] public float MaxHealth { get; private set; }
+    [field: SerializeField] public float CurrentHealth { get; protected set; }
+    [field: SerializeField] public float MaxHealth { get; protected set; }
     [field: SerializeField] public UnitSO unitSO { get; private set; } // 這個單位的數據
     [SerializeField] private DecalProjector onSelectDecal; // 被選中時的標籤貼紙
 
+    //定義血量更新事件
+    public delegate void HealthUpdatedEvent(CommandableUnit unit, int lastHealth, int newHealth);
+    public event HealthUpdatedEvent OnHealthUpdated;
     private Command[] initialAvailableCommands; //表示第一層(頁)的指令列表
+
     protected virtual void Awake()
     {
         onSelectDecal.gameObject.SetActive(false); // 初始化時隱藏標籤貼紙
@@ -54,5 +58,12 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
         //因為單位被選中時會刷新UI
         //之後可以考慮新增一個更明確的事件，目前先偷懶
         Bus<SelectedEvent>.Publish(new SelectedEvent(this));
+    }
+
+    public void Heal(int amount)
+    {
+        int lastHealth = (int)CurrentHealth;
+        CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
+        OnHealthUpdated?.Invoke(this, lastHealth, (int)CurrentHealth);
     }
 }

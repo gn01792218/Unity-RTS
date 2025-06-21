@@ -27,6 +27,7 @@ public class BuildingUnit : CommandableUnit
     private const int MAX_QUEUE_SIZE = 5; //佇列的最大限制
     private List<UnitSO> buildingQueue = new(MAX_QUEUE_SIZE); //生產佇列
     private IBuildingBuilder buildingBuilder; //可能是自己，也可能是別人(如果自己死了的話)!
+
     protected override void Start() //在建築腳本被enable時，照我們的邏輯，是在建築完成後才會被enable
     {
         base.Start();
@@ -95,11 +96,12 @@ public class BuildingUnit : CommandableUnit
         }
     }
 
-    public void StartBuilding(IBuildingBuilder builder) //顯示ghostMaterial、初始化BuildingProgress
+    public void StartBuilding(IBuildingBuilder builder) //建築物被放在地上時( 顯示ghostMaterial、初始化BuildingProgress)
     {
         MainRender = GetComponentInChildren<MeshRenderer>();
         var so = unitSO as BuildingUnitSO;
         MainRender.material = so.PlacementMaterial;
+        MaxHealth = so.Health;
 
         //設定BuildingProgress的初始狀態
         buildingBuilder = builder;
@@ -107,6 +109,11 @@ public class BuildingUnit : CommandableUnit
             Time.time - unitSO.BuildTime * Progress.Progress,
             Progress.Progress,
             BuildingProgress.BuildingState.Building);
+        //血量設定
+        if (Progress.Progress == 0)
+        {
+            Heal(1);
+        }
         Bus<UnitDeathEvent>.Subscribe(OnUnitDeath);
     }
     private void OnUnitDeath(UnitDeathEvent evt)
