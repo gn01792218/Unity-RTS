@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Build CommandPost Command
   m_EditorClassIdentifier: 
   <CommandName>k__BackingField: Build CommandPost
+  <IsSingleUnitCommand>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 21300000, guid: dfebbdf93f58d764ab9aa4d54edd629e, type: 3}
   <SlotIndex>k__BackingField: 2
   <RequiresClickToActive>k__BackingField: 1

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Worker : Unit, IBuildingBuilder
 {
+  public bool IsBuilding => behaviorAgent.GetVariable("Commands", out BlackboardVariable<UnitCommandsEnum> command) && command.Value == UnitCommandsEnum.BuildBuilding;
   //computed properties
   public bool HasResources
   {

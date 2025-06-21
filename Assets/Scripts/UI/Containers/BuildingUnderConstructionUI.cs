@@ -21,7 +21,6 @@ public class BuildingUnderConstructionUI : MonoBehaviour, IUIElement<BuildingUni
     {
         while (enabled && building.Progress.Progress < 1)
         {
-            Debug.Log(building.Progress.Progress);
             if (building.Progress.State != BuildingProgress.BuildingState.Building)
             {
                 yield return null;
@@ -32,7 +31,6 @@ public class BuildingUnderConstructionUI : MonoBehaviour, IUIElement<BuildingUni
             float endTime = startTime + building.unitSO.BuildTime;
 
             progressBar.SetProgress(Mathf.Clamp01((Time.time - startTime) / (endTime - startTime)));
-            Debug.Log($"設置建築物建造中的progressBar{Mathf.Clamp01((Time.time - startTime) / (endTime - startTime))}");
             yield return null;
         }
     }

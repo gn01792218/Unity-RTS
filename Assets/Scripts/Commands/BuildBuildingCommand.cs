@@ -1,4 +1,5 @@
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 [CreateAssetMenu(fileName = "Build Building Command", menuName = "Commands/Actions/Build Building Command", order = 120)]
 public class BuildBuildingCommand : Command
@@ -8,11 +9,11 @@ public class BuildBuildingCommand : Command
     [field: SerializeField] public BuildingRestrictionSO[] RestrictionsSO { get; private set; } 
     public override bool CanHandle(CommandContext context)
     {
-        //點空地的時候
-        if (context.Unit is not IBuildingBuilder) return false;
+        //點空地的時候，或正在忙的時候
+        if (context.Unit is not IBuildingBuilder builder || builder.IsBuilding ) return false;
 
-        //如果點擊到已經存在的建築，則恢復建造
-        if (context.Hit.collider != null)
+        //如果點擊到已經存在的建築，且是右鍵點擊，則恢復建造
+        if (context.Hit.collider != null && context.MouseButton == MouseButton.Right)
         {
             return context.Hit.collider.TryGetComponent(out BuildingUnit buildingUnit)
                    && buildingUnit.unitSO == buildingSo

@@ -2,10 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using System.Collections.Generic;
-using NUnit.Framework;
-using System;
 using System.Linq;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -253,7 +252,11 @@ public class PlayerInput : MonoBehaviour
         for (int i = 0; i < units.Count; i++)
         {
             CommandContext context = new(units[i], hit, i);
-            activeCommand.Handle(context);
+            if (activeCommand.CanHandle(context))
+            {
+                activeCommand.Handle(context);
+                if (activeCommand.IsSingleUnitCommand) break;
+            }
         }
         activeCommand = null; //執行完之後清除掉, 代表已經執行完成
     }
@@ -277,12 +280,13 @@ public class PlayerInput : MonoBehaviour
                 }
                 for (int i = 0; i < units.Count; i++) // 遍歷所有選中的物件
                 {
-                    CommandContext context = new(units[i], hit, i);
+                    CommandContext context = new(units[i], hit, i, MouseButton.Right);
                     foreach (Command command in GetAvailableCommands(units[i])) // 遍歷所有可用的指令
                     {
                         if (command.CanHandle(context)) // 如果該指令可以處理這個單位和擊中點
                         {
                             command.Handle(context); // 執行該指令
+                            if (command.IsSingleUnitCommand) return; //只給單一Unit使用的也要返回
                             break; //執行到後就結束
                         }
                     }
