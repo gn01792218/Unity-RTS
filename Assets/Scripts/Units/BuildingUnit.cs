@@ -118,16 +118,15 @@ public class BuildingUnit : CommandableUnit
     }
     private void OnUnitDeath(UnitDeathEvent evt)
     {
-        if (evt.Unit == this)
+        if (evt.Unit.TryGetComponent(out IBuildingBuilder builder) && builder == buildingBuilder)
         {
-            //如果自己死了，則把buildingBuilder設為null
-            buildingBuilder = null;
             Progress = new BuildingProgress(
                 Progress.StartTime,
                 (Time.time - Progress.StartTime) / unitSO.BuildTime,
                 BuildingProgress.BuildingState.Paused
                 );
             Bus<UnitDeathEvent>.Unsubscribe(OnUnitDeath);
+            Debug.Log($"建築師死掉了，建築進度{Progress.Progress},建築狀態{Progress.State},計算數值{(Time.time - Progress.StartTime) / unitSO.BuildTime}");
         }
     }
 

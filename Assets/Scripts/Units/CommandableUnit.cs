@@ -3,6 +3,7 @@ using UnityEngine.Rendering.Universal;
 
 public abstract class CommandableUnit : MonoBehaviour, ISelectable
 {
+    [field: SerializeField] public bool IsSelected{ get; protected set; }
     [field: SerializeField] public Command[] AvailableCommands { get; private set; } //裝載各種指令
     [field: SerializeField] public float CurrentHealth { get; protected set; }
     [field: SerializeField] public float MaxHealth { get; protected set; }
@@ -29,6 +30,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
     public void OnSelect()
     {
         onSelectDecal.gameObject.SetActive(true); // Enable the decal projector
+        IsSelected = true;
         //發送被選到的事件,
         // ps.監聽事件者要負責將該單位添加到選取列表中
         Bus<SelectedEvent>.Publish(new SelectedEvent(this));
@@ -37,6 +39,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
     public void OnDeselect()
     {
         onSelectDecal.gameObject.SetActive(false); // Disable the decal projector when deselected
+        IsSelected = false;
         //發送取消選取的事件
         // ps.監聽事件者要負責將該單位從選取列表中移除
         OverridesAvailableCommands(null); //傳入null會恢復到該單位的初始化指令列表
@@ -57,7 +60,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
         //通知UI更新
         //因為單位被選中時會刷新UI
         //之後可以考慮新增一個更明確的事件，目前先偷懶
-        Bus<SelectedEvent>.Publish(new SelectedEvent(this));
+        if(IsSelected) Bus<SelectedEvent>.Publish(new SelectedEvent(this));
     }
 
     public void Heal(int amount)

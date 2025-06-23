@@ -63,7 +63,7 @@ public class RuntimeUI : MonoBehaviour
     }
     private void RefreshUI()
     {
-        //框選多的個時候
+        //框1個獲選多的個時候
         if (selectedUnits.Count > 0)
         {
             //1.更新指令UI

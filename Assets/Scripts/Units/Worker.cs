@@ -26,6 +26,11 @@ public class Worker : Unit, IBuildingBuilder
     {
       eventChannel.Value.Event += OnGatherResourceEvent;
     }
+    //註冊建築行為的事件監聽
+    if (behaviorAgent.GetVariable("BuildingEvent", out BlackboardVariable<BuildingEventChannel> buildingEvent))
+    {
+      buildingEvent.Value.Event += OnBuildingEvent;
+    }
   }
   public void Gather(GatherableResource resource)
   {
@@ -65,6 +70,34 @@ public class Worker : Unit, IBuildingBuilder
     Bus<GatherResourceEvent>.Publish(new GatherResourceEvent(Amount, Resources));
   }
 
+  //為了處理不同Worker之間的行為，需要監聽由行為樹中發射的建築的事件
+  private void OnBuildingEvent(GameObject Self, BuildingEventEnum buildingEvent, BuildingUnit building)
+  {
+    switch (buildingEvent)
+    {
+      case BuildingEventEnum.ArrivedAt:
+        //若有人正在蓋
+        if (building != null && building.Progress.State == BuildingProgress.BuildingState.Building)
+        {
+          Stop();
+          break;
+        }
+        //若沒有人在蓋
+        OverridesAvailableCommands(new Command[] { CancelBuildingCommand });
+        break;
+      case BuildingEventEnum.Begin:
+        OverridesAvailableCommands(new Command[] { CancelBuildingCommand });
+        break;
+      case BuildingEventEnum.Cancel:
+      case BuildingEventEnum.Abort:
+        OverridesAvailableCommands(null); //恢復原廠指令設定
+        break;
+      case BuildingEventEnum.Completed:
+      default:
+        break;
+    }
+  }
+
   public void CancelBuilding()
   {
     //釋放資源
@@ -94,7 +127,5 @@ public class Worker : Unit, IBuildingBuilder
     behaviorAgent.SetVariableValue("BuildBuildingSO", building.unitSO);
     behaviorAgent.SetVariableValue<GameObject>("BuildingGhost", null);
     behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.BuildBuilding);
-
-    OverridesAvailableCommands(new Command[] { CancelBuildingCommand });
   }
 }

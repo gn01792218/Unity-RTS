@@ -25,9 +25,9 @@ public abstract class Unit : CommandableUnit, IMoveable
 
     public void Move(Vector3 direction)
     {
+        OverridesAvailableCommands(null);
         //不直接操作agent來移動
         // agent.SetDestination(direction); 
-
         //改透過BehaviorAgent
         behaviorAgent.SetVariableValue("TargetLocation", direction); //"TargetLocation"對應該Behavior中的Blackboard中的變數
         behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Move);
@@ -35,6 +35,7 @@ public abstract class Unit : CommandableUnit, IMoveable
 
     public void Stop()
     {
+        OverridesAvailableCommands(null);
         behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Stop);//"Commands"對應行為黑板中的變數名稱
     }
     private void OnDestroy()

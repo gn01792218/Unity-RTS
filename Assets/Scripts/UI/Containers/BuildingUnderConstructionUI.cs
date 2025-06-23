@@ -10,6 +10,7 @@ public class BuildingUnderConstructionUI : MonoBehaviour, IUIElement<BuildingUni
     {
         gameObject.SetActive(true);
         unitName.SetText(building.unitSO.UnitName);
+        InitProgressBar(building);
         StartCoroutine(AnimateBuildingProgress(building));
     }
     public void Disable()
@@ -27,11 +28,24 @@ public class BuildingUnderConstructionUI : MonoBehaviour, IUIElement<BuildingUni
                 continue;
             }
 
-            float startTime = building.Progress.StartTime;
-            float endTime = startTime + building.unitSO.BuildTime;
-
-            progressBar.SetProgress(Mathf.Clamp01((Time.time - startTime) / (endTime - startTime)));
+            SetCurrentProgress(building);
             yield return null;
         }
+    }
+
+    private void InitProgressBar(BuildingUnit building)
+    {
+        float startTime = building.Progress.StartTime;
+        float endTime = startTime + building.unitSO.BuildTime;
+
+        progressBar.SetProgress(Mathf.Clamp01(startTime / (endTime - startTime)));
+    }
+
+    private void SetCurrentProgress(BuildingUnit building)
+    {
+        float startTime = building.Progress.StartTime;
+        float endTime = startTime + building.unitSO.BuildTime;
+
+        progressBar.SetProgress(Mathf.Clamp01((Time.time - startTime) / (endTime - startTime)));
     }
 }
