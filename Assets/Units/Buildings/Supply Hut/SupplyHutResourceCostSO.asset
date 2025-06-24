@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27a9a35e71418f1419a78b60e28bac4a, type: 3}
-  m_Name: CommandPostResourceCostSO
+  m_Name: SupplyHutResourceCostSO
   m_EditorClassIdentifier: 
   <MineralCost>k__BackingField: 100
   <GasCost>k__BackingField: 0

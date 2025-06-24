@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4292a2553e2eac34aa0908db847fe2d3, type: 3}
+  m_Script: {fileID: 11500000, guid: 70df32dc00929444ba6e11427b4d61d7, type: 3}
   m_Name: SupplyHutSO
   m_EditorClassIdentifier: 
   <UnitName>k__BackingField: Supply Hut
   <Prefab>k__BackingField: {fileID: 6964012305514025925, guid: 60174e2531fe1794a81f4a279e17f61d, type: 3}
-  <BuildTime>k__BackingField: 0
-  <Health>k__BackingField: 350
+  <BuildTime>k__BackingField: 40
+  <Health>k__BackingField: 500
   <Icon>k__BackingField: {fileID: 21300000, guid: 5b1043abe99f2d943b94b631a2aa42d9, type: 3}
-  <ResourceCostSO>k__BackingField: {fileID: 0}
+  <ResourceCostSO>k__BackingField: {fileID: 11400000, guid: d3c732f4aef0b8b4ab90b5c8cb2a4aab, type: 2}
+  <PlacementMaterial>k__BackingField: {fileID: -876546973899608171, guid: a7bfdfe00ff8fe04a906c3ac9bd30519, type: 3}

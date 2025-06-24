@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfa0d0e46d51c714aa05d00c9f8d940d, type: 3}
+  m_Name: Build Infantry School Command
+  m_EditorClassIdentifier: 
+  <CommandName>k__BackingField: Build Infantry School
+  <IsSingleUnitCommand>k__BackingField: 1
+  <Icon>k__BackingField: {fileID: 21300000, guid: 9913c672e9ced57439a2369b346459fe, type: 3}
+  <SlotIndex>k__BackingField: 7
+  <RequiresClickToActive>k__BackingField: 1
+  <ShowInCommandUI>k__BackingField: 1
+  <buildingSo>k__BackingField: {fileID: 11400000, guid: 7faf00bf1082f9742bdba806dd6bff68, type: 2}
+  <GhostPrefab>k__BackingField: {fileID: 6495942216733176767, guid: 2206c59db4981e746ad1529ae41e7a13, type: 3}
+  <RestrictionsSO>k__BackingField:
+  - {fileID: 11400000, guid: c068aa1e336c85a4083dd4e3165a26ae, type: 2}
