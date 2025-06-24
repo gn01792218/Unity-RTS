@@ -21,7 +21,8 @@ public partial class FindClosestCommandPostAction : Action
 
         foreach(Collider collider in colliders)
         {
-            if(collider.TryGetComponent(out CommandPost building)) 
+            if(collider.TryGetComponent(out CommandPost building)
+                && building.Progress.State == BuildingProgress.BuildingState.Completed ) 
             {
                 nearbyCommandPosts.Add(building);
             }

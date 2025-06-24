@@ -8,7 +8,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
     [field: SerializeField] public float CurrentHealth { get; protected set; }
     [field: SerializeField] public float MaxHealth { get; protected set; }
     [field: SerializeField] public UnitSO unitSO { get; private set; } // 這個單位的數據
-    [SerializeField] private DecalProjector onSelectDecal; // 被選中時的標籤貼紙
+    [SerializeField] protected DecalProjector onSelectDecal; // 被選中時的標籤貼紙
 
     //定義血量更新事件
     public delegate void HealthUpdatedEvent(CommandableUnit unit, int lastHealth, int newHealth);
@@ -27,7 +27,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
 
         initialAvailableCommands = AvailableCommands;
     }
-    public void OnSelect()
+    public virtual void OnSelect()
     {
         onSelectDecal.gameObject.SetActive(true); // Enable the decal projector
         IsSelected = true;
@@ -36,7 +36,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable
         Bus<SelectedEvent>.Publish(new SelectedEvent(this));
     }
 
-    public void OnDeselect()
+    public virtual void OnDeselect()
     {
         onSelectDecal.gameObject.SetActive(false); // Disable the decal projector when deselected
         IsSelected = false;

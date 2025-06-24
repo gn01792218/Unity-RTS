@@ -32,6 +32,16 @@ public class Worker : Unit, IBuildingBuilder
       buildingEvent.Value.Event += OnBuildingEvent;
     }
   }
+
+  public override void OnDeselect()
+  {
+    onSelectDecal.gameObject.SetActive(false); // Disable the decal projector when deselected
+    IsSelected = false;
+    if(!IsBuilding) OverridesAvailableCommands(null); //傳入null會恢復到該單位的初始化指令列表
+    //發送取消選取的事件
+    // ps.監聽事件者要負責將該單位從選取列表中移除
+    Bus<UnselectedEvent>.Publish(new UnselectedEvent(this));
+  }
   public void Gather(GatherableResource resource)
   {
     behaviorAgent.SetVariableValue("TargetResource", resource);
@@ -90,9 +100,9 @@ public class Worker : Unit, IBuildingBuilder
         break;
       case BuildingEventEnum.Cancel:
       case BuildingEventEnum.Abort:
+      case BuildingEventEnum.Completed:
         OverridesAvailableCommands(null); //恢復原廠指令設定
         break;
-      case BuildingEventEnum.Completed:
       default:
         break;
     }
