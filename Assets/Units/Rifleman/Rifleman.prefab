@@ -72,10 +72,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5550838747094831301}
   - component: {fileID: 68296883301228911}
-  - component: {fileID: -3609833339334719982}
   - component: {fileID: -2205929744976599278}
   - component: {fileID: 1219862349958267509}
-  m_Layer: 0
+  - component: {fileID: 2081015259489433803}
+  - component: {fileID: 1377475838404527464}
+  - component: {fileID: 6883919434454310807}
+  m_Layer: 6
   m_Name: Rifleman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,25 +123,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-3609833339334719982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1931094961596098796}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3afd8fbd5880eaf4abbe3a4718e11010, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <IsSelected>k__BackingField: 0
-  <AvailableCommands>k__BackingField: []
-  <CurrentHealth>k__BackingField: 100
-  <MaxHealth>k__BackingField: 100
-  <unitSO>k__BackingField: {fileID: 11400000, guid: 2875dffcd3d4e384a9291e1da81e3283, type: 2}
-  onSelectDecal: {fileID: 8673540065377058110}
-  CancelBuildingCommand: {fileID: 11400000, guid: 8bcef7fc7fa99084880afb57b449f692, type: 2}
 --- !u!136 &-2205929744976599278
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -175,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Graph: {fileID: 3879600135930503523, guid: 767bda5d658e8a045be64c66a16038c7, type: 2}
+  m_Graph: {fileID: 3178300377518009383, guid: c1fcbe6d594830f47aa8eba459a3ccf6, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 1720892356009394240
   m_IsInitialised: 0
@@ -191,6 +174,66 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1931094961596098796}
+--- !u!114 &2081015259489433803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931094961596098796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29222477e6a9bea4c882f333cf358381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsSelected>k__BackingField: 0
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
+  - {fileID: 11400000, guid: d96641d11026c794d82ce298d7dda3f3, type: 2}
+  <CurrentHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 0
+  <unitSO>k__BackingField: {fileID: 11400000, guid: 2875dffcd3d4e384a9291e1da81e3283, type: 2}
+  onSelectDecal: {fileID: 8673540065377058110}
+--- !u!95 &1377475838404527464
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931094961596098796}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 2a8a7123e3894b84994b0a335068bee9, type: 3}
+  m_Controller: {fileID: 9100000, guid: b2e578cb9270ee941994883712cf9623, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6883919434454310807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931094961596098796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f17050963e25094da8739a46e5d79ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftHandIKTarget: {fileID: 1627440132544312834}
+  rightHandIKTarget: {fileID: 2401092275114471008}
+  leftElbowIKTarget: {fileID: 9105185386273095323}
+  rightElbowIKTarget: {fileID: 4347862471379193798}
+  handIKAmount: 1
+  elbowIKAmount: 1
 --- !u!1 &6800298229124405648
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,7 +260,7 @@ Transform:
   m_GameObject: {fileID: 6800298229124405648}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -0.5100002, y: 0, z: 50.44}
+  m_LocalPosition: {x: 0, y: 0.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -464,15 +507,13 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 0ed981d2c83bdb8488c6f158c95e00e4, type: 2}
     m_RemovedComponents:
     - {fileID: 3661183800282018576, guid: 2454936dd2ec492489a9b9a50476e629, type: 3}
+    - {fileID: 5866666021909216657, guid: 2a8a7123e3894b84994b0a335068bee9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4177816611193295561, guid: 2a8a7123e3894b84994b0a335068bee9, type: 3}
       insertIndex: 0
       addedObject: {fileID: 4358255228496811177}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a8a7123e3894b84994b0a335068bee9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4071375344259752571}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a8a7123e3894b84994b0a335068bee9, type: 3}
 --- !u!4 &6605510633646906295 stripped
 Transform:
@@ -484,29 +525,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2a8a7123e3894b84994b0a335068bee9, type: 3}
   m_PrefabInstance: {fileID: 7084702069104429438}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7967011979719930927 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a8a7123e3894b84994b0a335068bee9, type: 3}
-  m_PrefabInstance: {fileID: 7084702069104429438}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4071375344259752571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7967011979719930927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f17050963e25094da8739a46e5d79ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftHandIKTarget: {fileID: 1627440132544312834}
-  rightHandIKTarget: {fileID: 2401092275114471008}
-  leftElbowIKTarget: {fileID: 9105185386273095323}
-  rightElbowIKTarget: {fileID: 4347862471379193798}
-  handIKAmount: 1
-  elbowIKAmount: 1
 --- !u!1001 &7424212209951488479
 PrefabInstance:
   m_ObjectHideFlags: 0
