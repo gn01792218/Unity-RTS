@@ -8,6 +8,7 @@ using UnityEngine.Rendering.Universal;
 [RequireComponent(typeof(NavMeshAgent), typeof(BehaviorGraphAgent))]
 public abstract class Unit : CommandableUnit, IMoveable
 {
+    [SerializeField] private DamageableSensor DamageableSensor;
     public float AgentRadius => agent.radius; //獲取NavMeshAgent的半徑
     private NavMeshAgent agent; //獲取NavMeshAgent組件
     protected BehaviorGraphAgent behaviorAgent;
@@ -21,6 +22,13 @@ public abstract class Unit : CommandableUnit, IMoveable
     {
         base.Start(); //呼叫父類的Start方法
         Bus<SpawnUnitEvent>.Publish(new SpawnUnitEvent(this)); //發送自己已經出生的消息
+
+        //初始化Sensor監聽
+        if (DamageableSensor != null)
+        {
+            DamageableSensor.OnUnitEnter += HandleDamageableEnter;
+            DamageableSensor.OnUnitExit += HandleDamageableExit;
+        }
     }
 
     public void Move(Vector3 direction)
@@ -42,5 +50,13 @@ public abstract class Unit : CommandableUnit, IMoveable
     {
         //當單位死亡時，發送死亡事件
         Bus<UnitDeathEvent>.Publish(new UnitDeathEvent(this));
+    }
+    private void HandleDamageableEnter(IDamageable damageable)
+    {
+        Debug.Log($"有可以攻擊的單位進入 : {DamageableSensor.Damageables.Count}");
+    }
+    private void HandleDamageableExit(IDamageable damageable)
+    {
+
     }
 }

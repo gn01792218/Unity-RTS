@@ -81,7 +81,7 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable, IDamageable
     public void Heal(int amount)
     {
         int lastHealth = (int)CurrentHealth;
-        
+
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
 
         //更新血量
