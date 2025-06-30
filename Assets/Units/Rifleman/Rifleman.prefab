@@ -161,6 +161,7 @@ MonoBehaviour:
   m_Graph: {fileID: 3178300377518009383, guid: c1fcbe6d594830f47aa8eba459a3ccf6, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 1720892356009394240
+  - rid: 1720892510239981568
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -174,6 +175,14 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1931094961596098796}
+    - rid: 1720892510239981568
+      type: {class: 'BlackboardVariable`1[[UnitCommandsEnum, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17219618879806620256
+          m_Value1: 859892805974858881
+        Name: Command
+        m_Value: 1
 --- !u!114 &2081015259489433803
 MonoBehaviour:
   m_ObjectHideFlags: 0
