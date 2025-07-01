@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
@@ -53,10 +55,19 @@ public abstract class Unit : CommandableUnit, IMoveable
     }
     private void HandleDamageableEnter(IDamageable damageable)
     {
-        Debug.Log($"有可以攻擊的單位進入 : {DamageableSensor.Damageables.Count}");
+        //DamageableSensor是一個Trigger的物件，會自己偵測到單位，並將之+入或移除
+        //因此這裡只是將DamageableSensor的列表，複製到BehaviorTree的Blackboard而已
+        behaviorAgent.SetVariableValue("NearbyDamageableUnits", GetSortedNearbyDamageableUnits());
     }
     private void HandleDamageableExit(IDamageable damageable)
     {
-
+        behaviorAgent.SetVariableValue("NearbyDamageableUnits", GetSortedNearbyDamageableUnits());
+    }
+    private List<GameObject> GetSortedNearbyDamageableUnits()
+    {
+        return DamageableSensor.Damageables
+            .OrderBy(d => Vector3.Distance(transform.position, d.Transform.position))
+            .Select(d => d.Transform.gameObject)
+            .ToList();
     }
 }
