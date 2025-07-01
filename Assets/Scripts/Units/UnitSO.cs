@@ -10,4 +10,5 @@ public class UnitSO : ScriptableObject
     [field: SerializeField] public int Health { get; private set; } = 100;
     [field: SerializeField] public Sprite Icon { get; private set; }
     [field: SerializeField] public UnitResourceCostSO ResourceCostSO { get; private set; }
+    [field: SerializeField] public UnitAttackConfigSO AttackConfigSO { get; private set; }
 }

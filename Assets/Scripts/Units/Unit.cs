@@ -19,6 +19,9 @@ public abstract class Unit : CommandableUnit, IMoveable
         base.Awake(); //呼叫父類的Awake方法
         agent = GetComponent<NavMeshAgent>();
         behaviorAgent = GetComponent<BehaviorGraphAgent>();
+        // 初始化行為樹的黑板
+        behaviorAgent.SetVariableValue("Command", UnitCommandsEnum.Stop);
+        behaviorAgent.SetVariableValue("AttackConfig", unitSO.AttackConfigSO);
     }
     protected override void Start()
     {
@@ -30,6 +33,7 @@ public abstract class Unit : CommandableUnit, IMoveable
         {
             DamageableSensor.OnUnitEnter += HandleDamageableEnter;
             DamageableSensor.OnUnitExit += HandleDamageableExit;
+            DamageableSensor.SetupAttackConfig(unitSO.AttackConfigSO);
         }
     }
 
@@ -63,10 +67,10 @@ public abstract class Unit : CommandableUnit, IMoveable
     {
         behaviorAgent.SetVariableValue("NearbyDamageableUnits", GetSortedNearbyDamageableUnits());
     }
-    private List<GameObject> GetSortedNearbyDamageableUnits()
+    private List<GameObject> GetSortedNearbyDamageableUnits() //由於目前blackboard中的List除基本類型、Gameobject以外，無法使用自訂義類型，因此暫時使用Gameobject
     {
         return DamageableSensor.Damageables
-            .OrderBy(d => Vector3.Distance(transform.position, d.Transform.position))
+            .OrderBy(d => Vector3.Distance(transform.position, d.Transform.position)) 
             .Select(d => d.Transform.gameObject)
             .ToList();
     }
