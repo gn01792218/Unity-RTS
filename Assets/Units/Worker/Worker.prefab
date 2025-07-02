@@ -337,6 +337,7 @@ Transform:
   m_Children:
   - {fileID: 4300102316693437684}
   - {fileID: 3167663946787915648}
+  - {fileID: 530941500761682737}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5291705191849110262
@@ -375,7 +376,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -399,13 +400,14 @@ MonoBehaviour:
   <AvailableCommands>k__BackingField:
   - {fileID: 11400000, guid: 316d10477b2928a409c85c886ada18fd, type: 2}
   - {fileID: 11400000, guid: 7f2f993dec6a6c044b5c41f61bf2e5a0, type: 2}
+  - {fileID: 11400000, guid: c50563613c21b964485bbd6a4a513099, type: 2}
   - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
-  - {fileID: 11400000, guid: d96641d11026c794d82ce298d7dda3f3, type: 2}
   - {fileID: 11400000, guid: 2a97b4509bc7cc041890a7261fd12562, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0
   <unitSO>k__BackingField: {fileID: 11400000, guid: 6bd16236e4b26574ba5a85094f13101e, type: 2}
   onSelectDecal: {fileID: 8327965449882544068}
+  DamageableSensor: {fileID: 1518410072553857090}
   CancelBuildingCommand: {fileID: 11400000, guid: 8bcef7fc7fa99084880afb57b449f692, type: 2}
 --- !u!136 &1712542174415614214
 CapsuleCollider:
@@ -864,7 +866,7 @@ Transform:
   m_GameObject: {fileID: 3972779775682079280}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.03, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2398,6 +2400,72 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6512797478711436537}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9103353908067533753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 530941500761682737}
+  - component: {fileID: 1085288402820724766}
+  - component: {fileID: 1518410072553857090}
+  m_Layer: 10
+  m_Name: Damageable Sensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &530941500761682737
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103353908067533753}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.9353724, y: -2.271051, z: -0.45440674}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4508836722595271335}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1085288402820724766
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103353908067533753}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 8
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1518410072553857090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103353908067533753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee12b9e8a64b22849b5e0bec7ebc880c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9164442541026028635
 GameObject:
   m_ObjectHideFlags: 0

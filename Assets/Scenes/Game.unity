@@ -11188,14 +11188,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Worker
       objectReference: {fileID: 0}
-    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
-      propertyPath: <AvailableCommands>k__BackingField.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
-      propertyPath: '<AvailableCommands>k__BackingField.Array.data[4]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 2a97b4509bc7cc041890a7261fd12562, type: 2}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.271218
@@ -11235,10 +11227,6 @@ PrefabInstance:
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8260024586373674560, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
-      propertyPath: m_StoppingDistance
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15782,10 +15770,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1683842420137559233, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.03
-      objectReference: {fileID: 0}
     - target: {fileID: 2121919384460996091, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_Name
       value: Worker (1)
