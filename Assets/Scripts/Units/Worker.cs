@@ -2,7 +2,7 @@ using System;
 using Unity.Behavior;
 using UnityEngine;
 
-public class Worker : Unit, IBuildingBuilder, IAttacker
+public class Worker : MilitaryUnit, IBuildingBuilder
 {
   public bool IsBuilding => behaviorAgent.GetVariable("Commands", out BlackboardVariable<UnitCommandsEnum> command) && command.Value == UnitCommandsEnum.BuildBuilding;
   //computed properties
@@ -138,12 +138,4 @@ public class Worker : Unit, IBuildingBuilder, IAttacker
     behaviorAgent.SetVariableValue<GameObject>("BuildingGhost", null);
     behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.BuildBuilding);
   }
-
-    public void Attack(IDamageable damageable)
-    {
-    Debug.Log(damageable);
-        //設置behavior 的 variables
-        behaviorAgent.SetVariableValue("TargetGameObject", damageable.Transform.gameObject);
-        behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Attack);
-    }
 }
