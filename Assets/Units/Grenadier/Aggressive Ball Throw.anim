@@ -164986,7 +164986,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 1
-    functionName: OnThrowGrenade
+    functionName: OnThrowGrenadeAnimation
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

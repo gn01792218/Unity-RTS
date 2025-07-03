@@ -39,7 +39,7 @@ public abstract class Unit : CommandableUnit, IMoveable
         OverridesAvailableCommands(null);
         behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Stop);//"Commands"對應行為黑板中的變數名稱
     }
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         //當單位死亡時，發送死亡事件
         Bus<UnitDeathEvent>.Publish(new UnitDeathEvent(this));

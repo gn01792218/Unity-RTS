@@ -5,7 +5,6 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 [Serializable, GeneratePropertyBag]
 [NodeDescription(name: "AttackAction", story: "[Self] attacks [TargetGameObject] according to [AttackConfigSO] until it dies.", category: "Action", id: "56d4d7fae08cc3baa3e4d13f8d86b20b")]
