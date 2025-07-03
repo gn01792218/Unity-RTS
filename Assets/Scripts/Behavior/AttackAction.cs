@@ -4,14 +4,17 @@ using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 using UnityEngine.AI;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "AttackAction", story: "[Self] attacks [TargetGameObject] according to [AttackConfigSO] until [Target] dies.", category: "Action", id: "56d4d7fae08cc3baa3e4d13f8d86b20b")]
+[NodeDescription(name: "AttackAction", story: "[Self] attacks [TargetGameObject] according to [AttackConfigSO] until it dies.", category: "Action", id: "56d4d7fae08cc3baa3e4d13f8d86b20b")]
 public partial class AttackAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Self;
     [SerializeReference] public BlackboardVariable<GameObject> TargetGameObject;
     [SerializeReference] public BlackboardVariable<UnitAttackConfigSO> AttackConfigSO;
+    [SerializeReference] public BlackboardVariable<List<GameObject>> NearbyDamageables;
 
     private NavMeshAgent navMeshAgent;
     private Transform selfTransform;
@@ -34,23 +37,13 @@ public partial class AttackAction : Action
     protected override Status OnUpdate()
     {
         if (TargetGameObject.Value == null || targetUnit.CurrentHealth == 0) return Status.Success; //目標死亡就結束
-        //同步開槍動畫的速度和meshAgent一致?
+        //設置移動的動畫
         if (animator != null)
         {
-            animator.SetFloat(AnimationConstants.SPEED_ID, navMeshAgent.velocity.magnitude);
+            animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, navMeshAgent.velocity.magnitude);
         }
 
-        if (Vector3.Distance(targetTransform.position, selfTransform.position) >= AttackConfigSO.Value.AttackRange)
-        {
-            navMeshAgent.SetDestination(targetTransform.position);
-            navMeshAgent.isStopped = false;
-            //結束開槍動畫
-            if (animator != null)
-            {
-                animator.SetBool(AnimationConstants.ATTACK, false);
-            }
-            return Status.Running;
-        }
+        if (!NearbyDamageables.Value.Contains(TargetGameObject.Value)) return Status.Running;
 
         navMeshAgent.isStopped = true; //到了目標可攻擊距離位置就停下來
         SelfLookAtTarget();//朝向目標
@@ -91,6 +84,8 @@ public partial class AttackAction : Action
         {
             animator.SetBool(AnimationConstants.ATTACK, false);
         }
+        //恢復成可以行走的狀態
+        navMeshAgent.isStopped = false;
     }
     private bool HasValidInputs()
     {
@@ -99,7 +94,8 @@ public partial class AttackAction : Action
             && Self.Value.TryGetComponent(out MilitaryUnit _)
             && TargetGameObject.Value != null
             && TargetGameObject.Value.TryGetComponent(out IDamageable _)
-            && AttackConfigSO != null;
+            && AttackConfigSO != null
+            && NearbyDamageables != null;
     }
     private void Init()
     {
@@ -110,6 +106,19 @@ public partial class AttackAction : Action
 
         targetTransform = TargetGameObject.Value.transform;
         targetUnit = TargetGameObject.Value.GetComponent<IDamageable>();
+
+        //假如原本的目標不包含在附近目標中，追上去
+        if (!NearbyDamageables.Value.Contains(TargetGameObject.Value))
+        {
+            //去追目標
+            navMeshAgent.SetDestination(targetTransform.position);
+            navMeshAgent.isStopped = false;
+            //結束開槍動畫
+            if (animator != null)
+            {
+                animator.SetBool(AnimationConstants.ATTACK, false);
+            }
+        }
     }
 }
 

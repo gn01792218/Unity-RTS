@@ -58,7 +58,7 @@ MonoBehaviour:
   - rid: 1720892356009395150
   - rid: 1720892356009395151
   - rid: 1720892356009395152
-  m_VersionTimestamp: 638870576904159056
+  m_VersionTimestamp: 638871311689510354
   m_DebugInfo: {fileID: 3023492690287246391}
   m_RuntimeGraph: {fileID: 5552540321153298211}
   AssetID:
@@ -1171,7 +1171,7 @@ MonoBehaviour:
     - rid: 1720892356009395145
       type: {class: StickyNoteModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
-        Position: {x: 71.36398, y: 2378.7263}
+        Position: {x: 362.85092, y: 1881.4146}
         ID:
           m_Value0: 3496979215764616040
           m_Value1: 12763783858674299412
@@ -3402,7 +3402,7 @@ MonoBehaviour:
           rid: 1720892356932927491
         m_EndedNodes:
           rid: 1720892356932927492
-        m_VersionTimestamp: 638870576904159056
+        m_VersionTimestamp: 638871311689510354
     - rid: 1720892356932927489
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:

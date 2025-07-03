@@ -5,14 +5,20 @@ public class AttackCommand : Command
     public override bool CanHandle(CommandContext context)
     {
         return context.Unit is IAttacker
-            && context.Hit.collider != null
-            && context.Hit.collider.TryGetComponent(out IDamageable _);
+            && context.Hit.collider != null;
     }
 
     public override void Handle(CommandContext context)
     {
         IAttacker unit = context.Unit as IAttacker; //將單位轉換為Unit類別，為了獲取AgentRadius
-        unit.Attack(context.Hit.collider.GetComponent<IDamageable>());
+        if (context.Hit.collider.TryGetComponent(out IDamageable damageable))
+        {
+            unit.Attack(damageable);
+        }
+        else
+        {
+            unit.MovingAttack(context.Hit.point);
+        }
     }
     public override bool IsAvailable(CommandContext? context = null)
     {

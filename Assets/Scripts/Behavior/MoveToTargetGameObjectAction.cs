@@ -39,7 +39,7 @@ public partial class MoveToTargetGameObjectAction : Action
 
     protected override Status OnUpdate()
     {
-        if(animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
+        if(animator != null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, agent.velocity.magnitude);
         //切記要加上agent.pathPending，因為SetDestination計算路徑需要時間，所以一開始的remainingDistance會是0
         //如果不加上這個判斷，會導致agent.remainingDistance是就直接被Status.Success返回了，導致無法移動到該目標!
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)

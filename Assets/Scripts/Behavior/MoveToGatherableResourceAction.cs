@@ -49,7 +49,7 @@ public partial class MoveToGatherableResourceAction : Action
 
     protected override Status OnUpdate()
     {
-        if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
+        if (animator != null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, agent.velocity.magnitude);
         if (agent.remainingDistance >= agent.stoppingDistance)
         {
             return Status.Running;
@@ -74,7 +74,7 @@ public partial class MoveToGatherableResourceAction : Action
 
     protected override void OnEnd()
     {
-        if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
+        if (animator != null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, 0);
     }
 
     private bool HasValidInputs()

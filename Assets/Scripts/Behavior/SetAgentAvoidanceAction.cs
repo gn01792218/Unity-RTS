@@ -20,7 +20,7 @@ public partial class SetAgentAvoidanceAction : Action
             return Status.Failure;
         }   
 
-        if (agent.TryGetComponent(out Animator animator)) animator.SetFloat(AnimationConstants.SPEED_ID, 0); //停止動畫
+        if (agent.TryGetComponent(out Animator animator)) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, 0); //停止動畫
         agent.obstacleAvoidanceType = (ObstacleAvoidanceType)AvoidanceQuality.Value;
         return Status.Success;
     }

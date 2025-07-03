@@ -28,6 +28,8 @@ public class DamageableSensor : MonoBehaviour
             damageables.Add(enterUnit);
             OnUnitEnter?.Invoke(enterUnit); //喚起事件
         }
+        //監聽單位是否掛掉，只要註冊一次就好了
+        if (damageables.Count == 1) Bus<UnitDeathEvent>.Subscribe(HandleUnitDeath);
     }
 
     //任何具有Rigdbody元件者離開時，就會觸發此
@@ -38,6 +40,21 @@ public class DamageableSensor : MonoBehaviour
             damageables.Remove(enterUnit);
             OnUnitExit?.Invoke(enterUnit); //喚起事件
         }
+        //沒人的時候取消監聽
+        if (damageables.Count == 0) Bus<UnitDeathEvent>.Unsubscribe(HandleUnitDeath);
+    }
+    private void HandleUnitDeath(UnitDeathEvent evt)
+    {
+        //這種方式比較好
+        if (evt.Unit.TryGetComponent(out IDamageable enterUnit))
+        {
+            damageables.Remove(enterUnit);
+            OnUnitExit?.Invoke(enterUnit); //喚起事件
+        }
+    }
+    private void OnDestroy()
+    {
+        Bus<UnitDeathEvent>.Unsubscribe(HandleUnitDeath);
     }
 
     // 給外部用的方法

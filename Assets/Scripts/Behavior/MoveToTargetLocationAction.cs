@@ -36,14 +36,14 @@ public partial class MoveToTargetLocationAction : Action
 
     protected override Status OnUpdate()
     {
-        if(animator!=null) animator.SetFloat(AnimationConstants.SPEED_ID, agent.velocity.magnitude);
-        if (agent.remainingDistance <= agent.stoppingDistance) return Status.Success;
+        if(animator!=null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, agent.velocity.magnitude);
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) return Status.Success;
         return Status.Running;
     }
     //每次當我們成功或失敗，後要離開這個節點時
     protected override void OnEnd()
     {
-        if(animator!=null) animator.SetFloat(AnimationConstants.SPEED_ID, 0);
+        if(animator!=null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, 0);
     }
 }
 

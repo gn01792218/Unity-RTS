@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Unit Attack Config SO", menuName = "SO/Unit Attack Config SO", order = 7)]
 public class UnitAttackConfigSO : ScriptableObject
 {
-    [field: SerializeField] public float AttackRange { get; private set; } = 1.5f;
+    [field: SerializeField] public float AttackRange { get; private set; } = 5f;
     [field: SerializeField] public float AttackDelay { get; private set; } = 1f;
     [field: SerializeField] public int Damage { get; private set; } = 5;
 }

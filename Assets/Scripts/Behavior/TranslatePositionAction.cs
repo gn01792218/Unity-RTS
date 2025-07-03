@@ -36,14 +36,14 @@ public partial class TranslatePositionAction : Action
     {
         if (Time.time >= endTime) return Status.Success; // If the time has elapsed, return success
         //Move transform in the direction until the time has elapsed
-        if (animator != null)animator.SetFloat(AnimationConstants.SPEED_ID, Speed.Value); // Set the speed animation parameter
+        if (animator != null)animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, Speed.Value); // Set the speed animation parameter
         selfTransform.position += direction * Speed.Value * Time.deltaTime;
         return Status.Running;
     }
 
     protected override void OnEnd()
     {
-        if (animator != null) animator.SetFloat(AnimationConstants.SPEED_ID, 0f); // Reset speed animation parameter
+        if (animator != null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, 0f); // Reset speed animation parameter
     }
     private float CalculateTimeToTarget()
     {
