@@ -27,10 +27,11 @@ public class Grenadier : MilitaryUnit
     //Animation Event，別刪除唷!
     public void OnThrowGrenadeAnimation()
     {
+        IDamageable targetDamageable = null;
         //丟出離開parent
         grenade.transform.SetParent(null);
 
-        //計算目標移動
+        //計算目標起點與終點
         Vector3 startPosition = grenade.transform.position;
         Vector3 endPosition = grenade.transform.position + grenade.transform.forward * 3; //預設下往前丟3倍的距離
 
@@ -38,6 +39,7 @@ public class Grenadier : MilitaryUnit
             && targetGameObject != null)
         {
             endPosition = targetGameObject.Value.transform.position + Vector3.up; //丟到該目標位置
+            targetDamageable = targetGameObject.Value.GetComponent<IDamageable>();
         }
         else if (behaviorAgent.GetVariable("TargetLocation", out BlackboardVariable<Vector3> targetLocation))
         {
@@ -46,10 +48,10 @@ public class Grenadier : MilitaryUnit
         }
 
         //開始移動到該目標
-        StartCoroutine(AnimateGrenadeMovement(startPosition, endPosition));
+        StartCoroutine(AnimateGrenadeMovement(startPosition, endPosition, targetDamageable));
 
     }
-    private IEnumerator AnimateGrenadeMovement(Vector3 startPosition, Vector3 endPosition)
+    private IEnumerator AnimateGrenadeMovement(Vector3 startPosition, Vector3 endPosition, IDamageable damageable)
     {
         float time = 0;
         const float speed = 2;
@@ -65,6 +67,9 @@ public class Grenadier : MilitaryUnit
         explosionParticles.transform.SetParent(null); //粒子系統離開parent
         explosionParticles.transform.position = endPosition;
         explosionParticles.Play();
+
+        //給傷害
+        damageable?.TakeDamage(unitSO.AttackConfigSO.Damage);
 
         //最後炸彈重新回到手上，準備下一次丟
         grenade.transform.SetParent(grenadeParent);

@@ -59,7 +59,11 @@ public partial class AttackAction : Action
             {
                 selfUnit.AttackParticleSystem.Play();
             }
-            targetUnit.TakeDamage(AttackConfigSO.Value.Damage);
+            //假設該攻擊不屬於投射型攻擊(如手榴彈)，才馬上給傷害；否則得等到目標位置後，再給傷害(見該類的動畫設置，如Grenadier的AnimateGrenadeMovement)
+            if (!selfUnit.unitSO.AttackConfigSO.HasProjectileAttacks)
+            {
+                targetUnit.TakeDamage(AttackConfigSO.Value.Damage);
+            }
         }
         return Status.Running;
     }
