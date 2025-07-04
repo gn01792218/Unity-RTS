@@ -642,6 +642,7 @@ MonoBehaviour:
   <AttackParticleSystem>k__BackingField: {fileID: 0}
   grenade: {fileID: 1261287624979116851}
   explosionParticles: {fileID: 162524390503710701}
+  <AOEAttackConfigSO>k__BackingField: {fileID: 11400000, guid: 66c538f955cecde4e979c330e76c6d76, type: 2}
 --- !u!1 &1929278855779803906
 GameObject:
   m_ObjectHideFlags: 0

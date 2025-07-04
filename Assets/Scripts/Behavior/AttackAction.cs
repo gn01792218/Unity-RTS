@@ -59,10 +59,15 @@ public partial class AttackAction : Action
             {
                 selfUnit.AttackParticleSystem.Play();
             }
-            //假設該攻擊不屬於投射型攻擊(如手榴彈)，才馬上給傷害；否則得等到目標位置後，再給傷害(見該類的動畫設置，如Grenadier的AnimateGrenadeMovement)
+            //思考幾種狀況 : 
+            //1.HasProjectileAttacks、且屬於AOE ；HasProjectileAttacks 也不是AOE  ==> 交由該類別的OnThrow___Animation事件去判斷
+            //2.不是HasProjectileAttacks、但屬於AOE； 不是HasProjectileAttacks 也不是AOE
+
+            //假設該攻擊不屬於投射型攻擊(如手榴彈)，才馬上給傷害
             if (!selfUnit.unitSO.AttackConfigSO.HasProjectileAttacks)
             {
-                targetUnit.TakeDamage(AttackConfigSO.Value.Damage);
+                if (selfUnit.TryGetComponent(out IAOEAttacker self)) self.GiveAoeDamage(TargetGameObject.Value.transform.position);
+                else targetUnit.TakeDamage(AttackConfigSO.Value.Damage);
             }
         }
         return Status.Running;
