@@ -409,6 +409,7 @@ MonoBehaviour:
   onSelectDecal: {fileID: 8327965449882544068}
   DamageableSensor: {fileID: 1518410072553857090}
   <AttackParticleSystem>k__BackingField: {fileID: 0}
+  <TransportCapacityUsage>k__BackingField: 1
   CancelBuildingCommand: {fileID: 11400000, guid: 8bcef7fc7fa99084880afb57b449f692, type: 2}
 --- !u!136 &1712542174415614214
 CapsuleCollider:

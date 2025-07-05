@@ -640,6 +640,7 @@ MonoBehaviour:
   onSelectDecal: {fileID: 4185149856885083029}
   DamageableSensor: {fileID: 872509193256773844}
   <AttackParticleSystem>k__BackingField: {fileID: 0}
+  <TransportCapacityUsage>k__BackingField: 1
   grenade: {fileID: 1261287624979116851}
   explosionParticles: {fileID: 162524390503710701}
   <AOEAttackConfigSO>k__BackingField: {fileID: 11400000, guid: 66c538f955cecde4e979c330e76c6d76, type: 2}

@@ -3,10 +3,12 @@ using System.Linq;
 using Unity.Behavior;
 using UnityEngine;
 
-public class MilitaryUnit : Unit, IAttacker
+public class MilitaryUnit : Unit, IAttacker, ITransportable
 {
     [SerializeField] private DamageableSensor DamageableSensor;
     [field: SerializeField] public ParticleSystem AttackParticleSystem { get; private set; }
+    [field: SerializeField] public int TransportCapacityUsage { get; private set; } = 1;
+
     protected override void Awake()
     {
         base.Awake(); //呼叫父類的Awake方法
@@ -76,5 +78,10 @@ public class MilitaryUnit : Unit, IAttacker
             .OrderBy(d => Vector3.Distance(transform.position, d.Transform.position))
             .Select(d => d.Transform.gameObject)
             .ToList();
+    }
+
+    public void LoadInto(ITransporter transporter)
+    {
+        
     }
 }

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <UnitName>k__BackingField: Air Transport
   <Prefab>k__BackingField: {fileID: 1076983579694789324, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
-  <BuildTime>k__BackingField: 10
+  <BuildTime>k__BackingField: 60
   <Health>k__BackingField: 200
   <Icon>k__BackingField: {fileID: 21300000, guid: 4d0944a6c62020d4f955f5b7174bb96f, type: 3}
-  <ResourceCostSO>k__BackingField: {fileID: 0}
+  <ResourceCostSO>k__BackingField: {fileID: 11400000, guid: 69df38285b8f9984dacb7dcc7819810b, type: 2}
+  <AttackConfigSO>k__BackingField: {fileID: 0}

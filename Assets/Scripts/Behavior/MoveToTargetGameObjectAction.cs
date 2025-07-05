@@ -11,9 +11,11 @@ public partial class MoveToTargetGameObjectAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Agent;
     [SerializeReference] public BlackboardVariable<GameObject> TargetGameObject;
+    [SerializeReference] public BlackboardVariable<float> MoveThreshold = new(0.25f); //超過多遠要追蹤的值
 
     private NavMeshAgent agent;
     private Animator animator;
+    private Vector3 lastPosition;
 
     protected override Status OnStart()
     {
@@ -25,7 +27,7 @@ public partial class MoveToTargetGameObjectAction : Action
         Agent.Value.TryGetComponent(out animator);
 
         Vector3 targetPosition = GetTargetPosition();
-        if(Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
+        if (Vector3.Distance(agent.transform.position, targetPosition) <= agent.stoppingDistance)
         {
             return Status.Success;
         }
@@ -34,12 +36,13 @@ public partial class MoveToTargetGameObjectAction : Action
         //因為agent還沒有開始移動，這是Unity的bug   
         //所以Update中要加上agent.pathPending來判斷是否還在計算路徑
         agent.SetDestination(targetPosition);
+        lastPosition = targetPosition;
         return Status.Running;
     }
 
     protected override Status OnUpdate()
     {
-        if(animator != null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, agent.velocity.magnitude);
+        if (animator != null) animator.SetFloat(AnimationConstants.MOVE_SPEED_ID, agent.velocity.magnitude);
         //切記要加上agent.pathPending，因為SetDestination計算路徑需要時間，所以一開始的remainingDistance會是0
         //如果不加上這個判斷，會導致agent.remainingDistance是就直接被Status.Success返回了，導致無法移動到該目標!
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
@@ -47,6 +50,16 @@ public partial class MoveToTargetGameObjectAction : Action
             // Debug.Log($"Agent 到達目標位置: {TargetGameObject.Value.name}");
             return Status.Success;
         }
+        //超出MoveThreshold的時候要重新設置目標，才能追上去
+        Vector3 targetPosition = GetTargetPosition();
+        if (Vector3.Distance(targetPosition, lastPosition) >= MoveThreshold)
+        {
+            agent.SetDestination(targetPosition);
+            lastPosition = agent.destination;
+            // Debug.Log($"Agent 還沒到MoveThreshold: {TargetGameObject.Value.name}");
+            return Status.Running;
+        }
+        
         // Debug.Log($"Agent 移動中: {TargetGameObject.Value.name}");
         return Status.Running;
     }

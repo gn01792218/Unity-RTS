@@ -9,5 +9,6 @@ public enum UnitCommandsEnum
     Gather,
     ReturnResources,
     BuildBuilding,
-    Attack
+    Attack,
+    LoadUnits
 }

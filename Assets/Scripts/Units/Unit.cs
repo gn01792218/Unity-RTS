@@ -16,7 +16,7 @@ public abstract class Unit : CommandableUnit, IMoveable
         agent = GetComponent<NavMeshAgent>();
         behaviorAgent = GetComponent<BehaviorGraphAgent>();
         // 初始化行為樹的黑板
-        behaviorAgent.SetVariableValue("Command", UnitCommandsEnum.Stop);
+        behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Stop);
     }
     protected override void Start()
     {

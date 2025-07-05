@@ -208,6 +208,7 @@ MonoBehaviour:
   onSelectDecal: {fileID: 8673540065377058110}
   DamageableSensor: {fileID: 2463484551268009243}
   <AttackParticleSystem>k__BackingField: {fileID: 7334213964210709637}
+  <TransportCapacityUsage>k__BackingField: 1
 --- !u!95 &1377475838404527464
 Animator:
   serializedVersion: 7
