@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81e52cda230e13e48b2e4c321ea54f55, type: 3}
+  m_Name: UnLoadUnitCommand
+  m_EditorClassIdentifier: 
+  <CommandName>k__BackingField: UnLoadUnit
+  <IsSingleUnitCommand>k__BackingField: 0
+  <Icon>k__BackingField: {fileID: 21300000, guid: d10fe192d72e15c4686485dc1abeb418, type: 3}
+  <SlotIndex>k__BackingField: 7
+  <RequiresClickToActive>k__BackingField: 0
+  <ShowInCommandUI>k__BackingField: 1

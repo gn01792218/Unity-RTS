@@ -2,16 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Behavior;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MilitaryUnit : Unit, IAttacker, ITransportable
 {
     [SerializeField] private DamageableSensor DamageableSensor;
     [field: SerializeField] public ParticleSystem AttackParticleSystem { get; private set; }
     [field: SerializeField] public int TransportCapacityUsage { get; private set; } = 1;
+    public NavMeshAgent navMeshAgent { get; private set; }
 
     protected override void Awake()
     {
         base.Awake(); //呼叫父類的Awake方法
+        navMeshAgent = GetComponent<NavMeshAgent>();
         // 初始化行為樹的黑板
         behaviorAgent.SetVariableValue("AttackConfig", unitSO.AttackConfigSO);
     }
