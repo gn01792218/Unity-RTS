@@ -24,13 +24,21 @@ public abstract class Unit : CommandableUnit, IMoveable
         Bus<SpawnUnitEvent>.Publish(new SpawnUnitEvent(this)); //發送自己已經出生的消息
     }
 
-    public void Move(Vector3 direction)
+    public void MoveToLocation(Vector3 direction)
     {
         OverridesAvailableCommands(null);
         //不直接操作agent來移動
         // agent.SetDestination(direction); 
         //改透過BehaviorAgent
+        behaviorAgent.SetVariableValue<GameObject>("TargetGameObject", null); //讓行為節點樹可以判斷使用的是移動到Location
         behaviorAgent.SetVariableValue("TargetLocation", direction); //"TargetLocation"對應該Behavior中的Blackboard中的變數
+        behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Move);
+    }
+    public void MoveToGameObject(Transform transform)
+    {
+        OverridesAvailableCommands(null);
+        //改透過BehaviorAgent
+        behaviorAgent.SetVariableValue("TargetGameObject", transform.gameObject);
         behaviorAgent.SetVariableValue("Commands", UnitCommandsEnum.Move);
     }
 

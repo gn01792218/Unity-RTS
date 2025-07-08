@@ -82,6 +82,9 @@ public class MilitaryUnit : Unit, IAttacker, ITransportable
 
     public void LoadInto(ITransporter transporter)
     {
-        
+        //跑到Transporter處
+        MoveToGameObject(transporter.Transform);
+        //叫Transporter裝他
+        transporter.LoadUnit(this);
     }
 }

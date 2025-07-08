@@ -16,6 +16,14 @@ public class MoveCommand : Command
     {
         Unit unit = context.Unit as Unit; //將單位轉換為Unit類別，為了獲取AgentRadius
 
+        //若有目標，跟隨該目標
+        if (context.Hit.collider != null && context.Hit.collider.TryGetComponent(out CommandableUnit target))
+        {
+            unit.MoveToGameObject(target.transform);
+            return;
+        }
+
+        //若無目標，準備排優化隊型
         if (context.UnitIndex == 0) //當index為0的時候恢復初始值
         {
             unitsOnRing = 0; //計算當前有多少單位在這一圈上
@@ -32,7 +40,7 @@ public class MoveCommand : Command
             context.Hit.point.z + circleRadius * Mathf.Sin(unitOnRingsAngle * unitsOnRing) //往後每一圈的半徑都要+上去
         );
 
-        unit.Move(targetPosition); // 移動到擊中點
+        unit.MoveToLocation(targetPosition); // 移動到擊中點
         unitsOnRing++;
 
         //當到達一圈的上限時，開始準備下一圈的初始化作業

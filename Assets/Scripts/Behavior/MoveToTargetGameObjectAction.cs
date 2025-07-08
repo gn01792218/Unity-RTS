@@ -21,7 +21,7 @@ public partial class MoveToTargetGameObjectAction : Action
     {
         if (!Agent.Value.TryGetComponent(out agent) || TargetGameObject.Value == null)
         {
-            Debug.LogError("Agent 或 TargetGameObject 未正確設置！");
+            Debug.LogError($"Agent 或 TargetGameObject未正確設置！");
             return Status.Failure;
         }
         Agent.Value.TryGetComponent(out animator);

@@ -631,8 +631,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IsSelected>k__BackingField: 0
   <AvailableCommands>k__BackingField:
-  - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
+  - {fileID: 11400000, guid: 7042c8540e7b87148b55d349dcf6dcf8, type: 2}
   - {fileID: 11400000, guid: c50563613c21b964485bbd6a4a513099, type: 2}
+  - {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
   - {fileID: 11400000, guid: d96641d11026c794d82ce298d7dda3f3, type: 2}
   <CurrentHealth>k__BackingField: 0
   <MaxHealth>k__BackingField: 0

@@ -10742,6 +10742,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Worker
       objectReference: {fileID: 0}
+    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 316d10477b2928a409c85c886ada18fd, type: 2}
+    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+      propertyPath: '<AvailableCommands>k__BackingField.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d12abbd7cf39874ca680e70a585f7ed, type: 2}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.05

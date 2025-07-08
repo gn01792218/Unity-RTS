@@ -2,6 +2,7 @@ using UnityEngine;
 
 public interface IMoveable
 {
-    void Move(Vector3 direction);
+    void MoveToLocation(Vector3 direction);
+    void MoveToGameObject(Transform transform);
     void Stop();
 }
