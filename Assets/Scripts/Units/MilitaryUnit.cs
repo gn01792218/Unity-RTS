@@ -10,6 +10,7 @@ public class MilitaryUnit : Unit, IAttacker, ITransportable
     [field: SerializeField] public ParticleSystem AttackParticleSystem { get; private set; }
     [field: SerializeField] public int TransportCapacityUsage { get; private set; } = 1;
     public NavMeshAgent navMeshAgent { get; private set; }
+    public Sprite Icon => unitSO.Icon;
 
     protected override void Awake()
     {

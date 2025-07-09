@@ -9,6 +9,7 @@ public class RuntimeUI : MonoBehaviour
     [SerializeField] private BuildingSelectedUI buildingSelectedUI;
     [SerializeField] private UnitIconUI unitIconUI; //單選時的Unit Icon顯示
     [SerializeField] private SingleUnitSelectedUI singleUnitSelectedUI; //單選時的UI
+    [SerializeField] private UnitTransportUI unitTransportUI; 
     private HashSet<CommandableUnit> selectedUnits = new(12);
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class RuntimeUI : MonoBehaviour
         buildingSelectedUI.Disable();
         unitIconUI.Disable();
         singleUnitSelectedUI.Disable();
+        unitTransportUI.Disable();
     }
     private void OnDestroy()
     {
@@ -72,35 +74,55 @@ public class RuntimeUI : MonoBehaviour
             //2.更新單選的UI指令
             if (selectedUnits.Count == 1)
             {
-                var selectedUnit = selectedUnits.First();
-                //1.更新單位圖示UI
-                unitIconUI.EnableFor(selectedUnit);
-
-                //2.建築物的UI
-                if (selectedUnit is BuildingUnit building)
-                {
-                    singleUnitSelectedUI.Disable();
-                    buildingSelectedUI.EnableFor(building);
-                }
-                else //選到非建築物的單位時
-                {
-                    buildingSelectedUI.Disable();
-                    singleUnitSelectedUI.EnableFor(selectedUnit);
-                }
+                ResolvesSingleUnitSelectedUI();
             }
             else //多選時
             {
                 unitIconUI.Disable();
                 singleUnitSelectedUI.Disable();
                 buildingSelectedUI.Disable();
+                unitTransportUI.Disable();
             }
         }
         else //沒東西時
         {
-            commandUI.Disable();
-            buildingSelectedUI.Disable();
-            unitIconUI.Disable();
-            singleUnitSelectedUI.Disable();
+            DisableAllContainers();
         }
+    }
+
+    private void ResolvesSingleUnitSelectedUI()
+    {
+        var selectedUnit = selectedUnits.First();
+        //1.更新單位圖示UI
+        unitIconUI.EnableFor(selectedUnit);
+
+        //2.建築物的UI
+        if (selectedUnit is BuildingUnit building)
+        {
+            singleUnitSelectedUI.Disable();
+            unitTransportUI.Disable();
+            buildingSelectedUI.EnableFor(building);
+        }
+        else if (selectedUnit is ITransporter transpoter && transpoter.UsedCapacity > 0)
+        {
+            unitTransportUI.EnableFor(transpoter);
+            singleUnitSelectedUI.Disable();
+            buildingSelectedUI.Disable();
+        }
+        else //選到其他的單位時
+        {
+            buildingSelectedUI.Disable();
+            unitTransportUI.Disable();
+            singleUnitSelectedUI.EnableFor(selectedUnit);
+        }
+    }
+
+    private void DisableAllContainers()
+    {
+        commandUI.Disable();
+        buildingSelectedUI.Disable();
+        unitIconUI.Disable();
+        singleUnitSelectedUI.Disable();
+        unitTransportUI.Disable();
     }
 }
