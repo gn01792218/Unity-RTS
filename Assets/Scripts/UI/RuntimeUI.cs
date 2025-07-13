@@ -17,6 +17,8 @@ public class RuntimeUI : MonoBehaviour
         Bus<UnselectedEvent>.Subscribe(HandleUnitUnselected);
         Bus<UnitDeathEvent>.Subscribe(HandleUnitDeath);
         Bus<GatherResourceEvent>.Subscribe(HandleGatherResource);
+        Bus<UnitLoadEvent>.Subscribe(HandleUnitLoaded);
+        Bus<UnitUnLoadEvent>.Subscribe(HandleUnitUnLoad);
     }
 
     private void Start()
@@ -33,6 +35,27 @@ public class RuntimeUI : MonoBehaviour
         Bus<UnselectedEvent>.Unsubscribe(HandleUnitUnselected);
         Bus<UnitDeathEvent>.Unsubscribe(HandleUnitDeath);
         Bus<GatherResourceEvent>.Unsubscribe(HandleGatherResource);
+        Bus<UnitLoadEvent>.Unsubscribe(HandleUnitLoaded);
+        Bus<UnitUnLoadEvent>.Unsubscribe(HandleUnitUnLoad);
+    }
+    private void HandleUnitLoaded(UnitLoadEvent evt)
+    {
+        if (selectedUnits.Count == 1 && selectedUnits.First() is ITransporter)
+        {
+            RefreshUI();
+        }
+        else if (evt.Unit is CommandableUnit commandable && selectedUnits.Contains(commandable))
+        {
+            commandable.OnDeselect(); //這裡面會呼叫UnselectedEvent去觸發ResresfUI
+        }
+
+    }
+    private void HandleUnitUnLoad(UnitUnLoadEvent evt)
+    {
+        if (selectedUnits.Count == 1 && selectedUnits.First() is ITransporter)
+        {
+            RefreshUI();
+        }
     }
     private void HandleUnitSelected(SelectedEvent evt)
     {

@@ -77,6 +77,7 @@ public class TransportUnit : Unit, ITransporter
                 moveable.MoveToLocation(hit.position);
             }
             loadedUnits.Remove(unit);
+            Bus<UnitUnLoadEvent>.Publish(new UnitUnLoadEvent(unit, this));
             return true;
         }
         return false;
@@ -87,12 +88,13 @@ public class TransportUnit : Unit, ITransporter
     }
     private void HandleLoadUnit(GameObject self, GameObject targetGameObject)
     {
-        Debug.Log($"Load {targetGameObject.name}");
+        // Debug.Log($"Load {targetGameObject.name}");
         targetGameObject.SetActive(false); //1.先禁用該單位
         targetGameObject.transform.SetParent(self.transform); //2.貼到我們運輸單位下
         ITransportable transportable = targetGameObject.GetComponent<ITransportable>();
         UsedCapacity += transportable.TransportCapacityUsage; //3.更新容量
         loadedUnits.Add(transportable); //4.加到列表中
+        Bus<UnitLoadEvent>.Publish(new UnitLoadEvent(transportable, this));
 
         //從行為樹列表中移除
         if (behaviorAgent.GetVariable("TargetUnits", out BlackboardVariable<List<GameObject>> targetUnits))
