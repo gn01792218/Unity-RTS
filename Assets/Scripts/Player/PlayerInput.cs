@@ -161,6 +161,7 @@ public class PlayerInput : MonoBehaviour
         //僅針對活著的單位做處理
         foreach (Unit unit in aliveUnits)
         {
+            if(!unit.gameObject.activeInHierarchy) continue; //如果單位沒有啟用，就跳過
             // 獲取單位位置的螢幕座標
             Vector2 unitPosition = camera.WorldToScreenPoint(unit.transform.position);
             //如果該單位的位置在框選範圍內

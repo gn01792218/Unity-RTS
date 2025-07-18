@@ -1,10 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))] //掛上此腳本會強制送一個Button唷!
-public class CommandButton : MonoBehaviour, IUIElement<Command, UnityAction>, IPointerEnterHandler, IPointerExitHandler
+public class CommandButton : MonoBehaviour, IUIElement<Command,IEnumerable<CommandableUnit> ,UnityAction>, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image icon;
     [SerializeField] private Tooltip tooltip;
@@ -18,11 +21,11 @@ public class CommandButton : MonoBehaviour, IUIElement<Command, UnityAction>, IP
         rectTransform = GetComponent<RectTransform>();
         Disable();
     }
-    public void EnableFor(Command command, UnityAction onClick)
+    public void EnableFor(Command command, IEnumerable<CommandableUnit> selectedUnits,UnityAction onClick)
     {
         button.onClick.RemoveAllListeners(); //確保清除不必要的監聽，因為可能有沒有call Disable的情況
         SetIcon(command.Icon);
-        button.interactable = command.IsAvailable();
+        button.interactable = selectedUnits.Any(unit=> command.IsAvailable(new CommandContext(unit, new RaycastHit())));
         button.onClick.AddListener(onClick);
         isActive = true;
 

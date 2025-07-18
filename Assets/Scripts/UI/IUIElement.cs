@@ -11,9 +11,14 @@ public interface IUIElement<T>
     void Disable();
 }
 
-public interface IUIElement<T1, T2>  
+public interface IUIElement<T1, T2>
 {
     //主要是給像是指令按鈕這類有call back function的元件使用
     void EnableFor(T1 item, T2 callback); //得告訴我是哪種類別，又需要的call back是什麼
+    void Disable();
+}
+public interface IUIElement<T1, T2, T3>  
+{
+    void EnableFor(T1 item, T2 context, T3 callback);
     void Disable();
 }

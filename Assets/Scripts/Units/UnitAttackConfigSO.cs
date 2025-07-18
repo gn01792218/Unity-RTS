@@ -8,4 +8,6 @@ public class UnitAttackConfigSO : ScriptableObject
     [field: SerializeField] public float AttackDelay { get; private set; } = 1f;
     [field: SerializeField] public int Damage { get; private set; } = 5;
     [field: SerializeField] public bool HasProjectileAttacks { get; private set; } = false; //是否屬於投射型(如手榴彈)的攻擊
+    [field: SerializeField] public LayerMask DamageableLayers { get; private set; } // 可傷害的圖層有哪些
+
 }

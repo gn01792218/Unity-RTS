@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2ed2b9cdea5af54f930dbb63373f703, type: 3}
   m_Name: Worker Attack Config SO
   m_EditorClassIdentifier: 
-  <AttackRange>k__BackingField: 5
-  <AttackDelay>k__BackingField: 0.5
-  <Damage>k__BackingField: 3
+  <AttackRange>k__BackingField: 1.5
+  <AttackDelay>k__BackingField: 1
+  <Damage>k__BackingField: 5
+  <HasProjectileAttacks>k__BackingField: 0
+  <DamageableLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 192

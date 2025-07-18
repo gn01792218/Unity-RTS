@@ -18,6 +18,6 @@ public class UnLoadUnitCommand : Command
 
     public override bool IsAvailable(CommandContext? context = null)
     {
-        return true;
+        return context?.Unit is ITransporter transporter && transporter.UsedCapacity > 0;
     }
 }

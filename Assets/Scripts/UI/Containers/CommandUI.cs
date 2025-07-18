@@ -20,14 +20,14 @@ public class CommandUI : MonoBehaviour, IUIElement<HashSet<CommandableUnit>>
     }
     private void RefreshButtons(HashSet<CommandableUnit> selectunits)
     {
-        HashSet<Command> availableCommands = new(9); //按鈕介面最多可以放9個按鈕而已
+        IEnumerable<Command> availableCommands = selectunits.ElementAt(0).AvailableCommands; //按鈕介面最多可以放9個按鈕而已
         foreach(CommandableUnit unit in selectunits){
-            if(unit.AvailableCommands != null) availableCommands.UnionWith(unit.AvailableCommands); //使用UnionWith確保不會重複+到一樣的指令
+            if(unit.AvailableCommands != null) availableCommands = availableCommands.Intersect(unit.AvailableCommands); // 用Intersect找出所有選中單位的可用指令之交集
         }
         for(int i =0; i< commandButtons.Length; i++){
             Command commandForSlot = availableCommands.Where(command => command.SlotIndex == i && command.ShowInCommandUI).FirstOrDefault();
             if(commandForSlot != null){
-                commandButtons[i].EnableFor(commandForSlot, HandleClick(commandForSlot));
+                commandButtons[i].EnableFor(commandForSlot, selectunits ,HandleClick(commandForSlot));
             }
             else
             {
