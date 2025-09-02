@@ -8,8 +8,10 @@ public abstract class CommandableUnit : MonoBehaviour, ISelectable, IDamageable
     [field: SerializeField] public int CurrentHealth { get; protected set; }
     [field: SerializeField] public int MaxHealth { get; protected set; }
     [field: SerializeField] public UnitSO unitSO { get; private set; } // 這個單位的數據
+    [field: SerializeField] public Owner Owner { get; set; }
     [SerializeField] protected DecalProjector onSelectDecal; // 被選中時的標籤貼紙
     public Transform Transform => transform;
+
 
     //定義血量更新事件
     public delegate void HealthUpdatedEvent(CommandableUnit unit, int lastHealth, int newHealth);

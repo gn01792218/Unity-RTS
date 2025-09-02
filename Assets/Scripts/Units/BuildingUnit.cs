@@ -105,6 +105,7 @@ public class BuildingUnit : CommandableUnit
 
         //設定BuildingProgress的初始狀態
         buildingBuilder = builder;
+        Owner = builder.Owner; //設置自己這棟建築的陣營by builder
         Progress = new BuildingProgress(
             Time.time - unitSO.BuildTime * Progress.Progress,
             Progress.Progress,
@@ -142,9 +143,13 @@ public class BuildingUnit : CommandableUnit
             //看到yield就會告訴unity，你先執行return 那段的事情
             yield return new WaitForSeconds(CurrentBuildingUnitSO.BuildTime);
             //完成後再回來繼續執行以下的東西
-            Instantiate(CurrentBuildingUnitSO.Prefab, transform.position, Quaternion.identity);
+            GameObject instance = Instantiate(CurrentBuildingUnitSO.Prefab, transform.position, Quaternion.identity);
+            if (instance.TryGetComponent(out CommandableUnit commandableUnit))
+            {
+                commandableUnit.Owner = Owner; //設置Unit的陣營
+            }
             //永遠只剔除第一個
-            buildingQueue.RemoveAt(0);
+                buildingQueue.RemoveAt(0);
         }
         EmitOnQueueUpdated(); //最後沒東西的時候也要發送通知
     }

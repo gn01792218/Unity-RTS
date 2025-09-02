@@ -7,6 +7,7 @@ public class DamageableSensor : MonoBehaviour
 {
 
     public List<IDamageable> Damageables => damageables.ToList(); //供外部觀看的，防止元列表被汙染
+    [field: SerializeField] public Owner Owner { get; set; }
 
     //與外溝通的事件
     public delegate void UnitDetectionEvent(IDamageable damageable);
@@ -23,7 +24,7 @@ public class DamageableSensor : MonoBehaviour
     //只要有任何具有Rigdbody元件者進入，就會觸發此
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out IDamageable enterUnit))
+        if (other.TryGetComponent(out IDamageable enterUnit) && enterUnit.Owner != Owner)
         {
             damageables.Add(enterUnit);
             OnUnitEnter?.Invoke(enterUnit); //喚起事件

@@ -6219,6 +6219,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rifleman
       objectReference: {fileID: 0}
+    - target: {fileID: 2081015259489433803, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
+      propertyPath: <Owner>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5550838747094831301, guid: 89fa1dbd1317d914a9727e0841043e2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.55396
@@ -10789,6 +10793,10 @@ PrefabInstance:
       value: Worker
       objectReference: {fileID: 0}
     - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+      propertyPath: <Owner>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: '<AvailableCommands>k__BackingField.Array.data[3]'
       value: 
       objectReference: {fileID: 11400000, guid: c50563613c21b964485bbd6a4a513099, type: 2}
@@ -11837,6 +11845,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1674122618939033289, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
+      propertyPath: <Owner>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.24
@@ -12322,6 +12334,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2262149369592676305, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
+      propertyPath: <Owner>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 437240106829665555, guid: 4d0c2e8c3bd76b64097b86828a286bc6, type: 3}
       propertyPath: m_AgentTypeID
       value: -1372625422
@@ -15128,6 +15144,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1674122618939033289, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
+      propertyPath: <Owner>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6018277380246554126, guid: 43943267dde60fe4a88cf5bd885c00e3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 21.80598
@@ -15184,6 +15204,10 @@ PrefabInstance:
     - target: {fileID: 2121919384460996091, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_Name
       value: Worker (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4385617141653560570, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
+      propertyPath: <Owner>k__BackingField
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4508836722595271335, guid: bc97f07eb8200de45a6e32cb5a0baf3b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19271,6 +19295,10 @@ PrefabInstance:
     - target: {fileID: 1324784020702504064, guid: d606f67b2169916478d3b1364e1b4428, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1779833440494696860, guid: d606f67b2169916478d3b1364e1b4428, type: 3}
+      propertyPath: <Owner>k__BackingField
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1813055781741166138, guid: d606f67b2169916478d3b1364e1b4428, type: 3}
       propertyPath: m_Name

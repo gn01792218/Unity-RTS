@@ -28,6 +28,7 @@ public class MilitaryUnit : Unit, IAttacker, ITransportable
         {
             DamageableSensor.OnUnitEnter += HandleDamageableEnter;
             DamageableSensor.OnUnitExit += HandleDamageableExit;
+            DamageableSensor.Owner = Owner; //讓Sensor知道自己是誰的
             DamageableSensor.SetupAttackConfig(unitSO.AttackConfigSO);
         }
     }
